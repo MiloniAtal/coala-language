@@ -1,0 +1,4 @@
+(executable
+ (public_name microc)
+ (name main)
+ (libraries microc llvm llvm.analysis))
