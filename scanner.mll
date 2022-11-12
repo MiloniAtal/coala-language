@@ -1,6 +1,6 @@
-(* Ocamllex scanner for NanoC *)
+(* Ocamllex scanner for Coala *)
 
-{ open Nanocparse }
+{ open Coalaparse }
 
 let digit = ['0'-'9']
 let letter = ['a'-'z' 'A'-'Z']
