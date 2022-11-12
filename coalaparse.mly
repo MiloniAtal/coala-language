@@ -1,4 +1,4 @@
-/* Ocamlyacc parser for NanoC */
+/* Ocamlyacc parser for Coala */
 
 %{
 open Ast
@@ -27,20 +27,48 @@ open Ast
 %%
 
 program_rule:
-  vdecl_list_rule stmt_list_rule EOF { {locals=$1; body=$2} }
+  decl_rule EOF { $1 }
+
+decl_rule:
+  /* nothing */ { ([], [])               }
+ | vdecl_rule SEMI decl_rule { (($1 :: fst $3), snd $3) }
+ | fdecl_rule decl_rule { (fst $2, ($1 :: snd $2)) }
 
 vdecl_list_rule:
   /*nothing*/                   { []       }
-  | vdecl_rule vdecl_list_rule  { $1 :: $2 }
+  | vdecl_rule SEMI vdecl_list_rule  { $1 :: $3 }
 
 vdecl_rule:
-  typ_rule ID SEMI { ($1, $2) }
+  typ_rule ID { ($1, $2) }
 
 
 typ_rule:
   INT       { Int  }
   | STRING       { String  }
   | BOOL    { Bool }
+
+/* fdecl_rule */
+fdecl_rule:
+  vdecl_rule LPAREN formals_opt_rule RPAREN LBRACE vdecl_list_rule stmt_list_rule RBRACE
+  {
+    {
+      rtyp=fst $1;
+      fname=snd $1;
+      formals=$3;
+      locals=$6;
+      body=$7
+    }
+  }
+
+/* formals_opt_rule */
+formals_opt_rule:
+  /*nothing*/ { [] }
+  | formals_list_rule { $1 }
+
+formals_list_rule:
+  vdecl_rule { [$1] }
+  | vdecl_rule COMMA formals_list_rule { $1::$3 }
+
 
 stmt_list_rule:
     /* nothing */               { []     }
@@ -51,6 +79,7 @@ stmt_rule:
   | LBRACE stmt_list_rule RBRACE                          { Block $2        }
   | IF LPAREN expr_rule RPAREN stmt_rule ELSE stmt_rule   { If ($3, $5, $7) }
   | WHILE LPAREN expr_rule RPAREN stmt_rule               { While ($3,$5)   }
+  | RETURN expr_rule SEMI                                      { Return $2       }
 
 expr_rule:
   | BLIT                          { BoolLit $1            }
@@ -66,3 +95,13 @@ expr_rule:
   | expr_rule OR expr_rule        { Binop ($1, Or, $3)    }
   | ID ASSIGN expr_rule           { Assign ($1, $3)       }
   | LPAREN expr_rule RPAREN       { $2                    }
+  | ID LPAREN args_opt_rule RPAREN     { Call ($1, $3)         }
+
+/* args_opt_rule*/
+args_opt_rule:
+  /*nothing*/ { [] }
+  | args_rule { $1 }
+
+args_rule:
+  expr_rule  { [$1] }
+  | expr_rule COMMA args_rule { $1::$3 }
