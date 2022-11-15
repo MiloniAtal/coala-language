@@ -1,21 +1,24 @@
 ### Build the Coala parser
 
 ```
-ocamlbuild test.native
+cd coala
+dune build
+```
+or
+
+Building and executing:
+```
+dune build bin/main.exe
+dune exec bin/main.exe
 ```
 
-### Run the Coala parser
-```
-./test.native
-```
-
-### Compiler files
+### Library files
 -  `ast.ml`: abstract syntax tree (AST)
 -  `scanner.mll`: scanner
 -  `coalaparse.mly`: parser
 
 ### Other files
 
-- `test.ml`: top-level file to test and run the scanner
+- `main.ml`: top-level file to run the scanner and parser
 - `example.mc`: a sample Coala source code
 - `example.out`: a sample parsed code of example.mc
