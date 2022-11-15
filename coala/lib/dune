@@ -1,0 +1,8 @@
+(library
+ (name coala)
+ (libraries llvm)
+ (flags (:standard -w +a-4 )))
+
+(ocamllex scanner)
+
+(ocamlyacc coalaparse)
