@@ -1,6 +1,6 @@
 type bop = Add | Sub | Equal | Neq | Less | And | Or
 
-type typ = Int | String | Bool
+type typ = Int | String | Bool | Void
 
 type expr =
   | Literal of int
@@ -10,6 +10,7 @@ type expr =
   | Binop of expr * bop * expr
   | Assign of string * expr
   | Call of string * expr list
+  | Noexpr
 
 type stmt =
   | Block of stmt list
@@ -51,6 +52,7 @@ let rec string_of_expr = function
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Call(f, el) ->
     f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+  | Noexpr -> ""
 
 
 let rec string_of_stmt = function
@@ -66,6 +68,7 @@ let string_of_typ = function
     Int -> "int"
   | String -> "string"
   | Bool -> "bool"
+  | Void -> "void"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
