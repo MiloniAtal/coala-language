@@ -6,8 +6,14 @@ module Ast = Coala__Ast
 (** @canonical Coala.Coalaparse *)
 module Coalaparse = Coala__Coalaparse
 
+(** @canonical Coala.Sast *)
+module Sast = Coala__Sast
+
 (** @canonical Coala.Scanner *)
 module Scanner = Coala__Scanner
+
+(** @canonical Coala.Semant *)
+module Semant = Coala__Semant
 
 module Coala = struct end
 [@@deprecated "this module is shadowed"]
