@@ -6,7 +6,7 @@ open Ast
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE QUOTES PLUS MINUS ASSIGN
 %token EQ NEQ LT AND OR
-%token IF ELSE WHILE INT STRING BOOL
+%token IF ELSE WHILE INT STRING BOOL VOID
 %token RETURN COMMA
 %token <int> LITERAL
 %token <bool> BLIT
@@ -44,8 +44,9 @@ vdecl_rule:
 
 typ_rule:
   INT       { Int  }
-  | STRING       { String  }
+  | STRING  { String  }
   | BOOL    { Bool }
+  | VOID    { Void}
 
 /* fdecl_rule */
 fdecl_rule:
@@ -79,7 +80,11 @@ stmt_rule:
   | LBRACE stmt_list_rule RBRACE                          { Block $2        }
   | IF LPAREN expr_rule RPAREN stmt_rule ELSE stmt_rule   { If ($3, $5, $7) }
   | WHILE LPAREN expr_rule RPAREN stmt_rule               { While ($3,$5)   }
-  | RETURN expr_rule SEMI                                      { Return $2       }
+  | RETURN expr_opt_rule SEMI                             { Return $2       }
+
+expr_opt_rule:
+    /* nothing */ { Noexpr }
+  | expr_rule          { $1 }
 
 expr_rule:
   | BLIT                          { BoolLit $1            }

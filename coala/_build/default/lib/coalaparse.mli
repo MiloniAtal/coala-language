@@ -19,6 +19,7 @@ type token =
   | INT
   | STRING
   | BOOL
+  | VOID
   | RETURN
   | COMMA
   | LITERAL of (int)
