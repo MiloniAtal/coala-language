@@ -1,10 +1,10 @@
 void main() {
     int x;
     string s;
-
     s = "coala";
-    x = 5;
-    print(x);
+    x = 1;
+    print(s);
+    printi(x);
     return;
 }
 
