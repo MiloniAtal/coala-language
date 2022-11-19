@@ -26,9 +26,9 @@
 # Target: scanner.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:scanner.cmo, file:scanner.ml, implem, ocaml, quiet }
 '/Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamlc.opt' -c -I '/Users/miloniatal/.opam/5.0.0~alpha1/lib/llvm' -o scanner.cmo scanner.ml # cached
 # Target: semant.ml.depends, tags: { extension:ml, file:semant.ml, ocaml, ocamldep, quiet }
-'/Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamldep.opt' -modules semant.ml > semant.ml.depends
+'/Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamldep.opt' -modules semant.ml > semant.ml.depends # cached
 # Target: semant.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:semant.cmo, file:semant.ml, implem, ocaml, quiet }
-'/Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamlc.opt' -c -I '/Users/miloniatal/.opam/5.0.0~alpha1/lib/llvm' -o semant.cmo semant.ml
+'/Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamlc.opt' -c -I '/Users/miloniatal/.opam/5.0.0~alpha1/lib/llvm' -o semant.cmo semant.ml # cached
 # Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
 '/Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamlc.opt' -c -I '/Users/miloniatal/.opam/5.0.0~alpha1/lib/llvm' -o main.cmo main.ml # cached
 # Target: ast.cmx, tags: { compile, extension:cmx, extension:ml, file:ast.cmx, file:ast.ml, implem, native, ocaml, quiet }
@@ -44,9 +44,9 @@
 # Target: scanner.cmx, tags: { compile, extension:cmx, extension:ml, file:scanner.cmx, file:scanner.ml, implem, native, ocaml, quiet }
 '/Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamlopt.opt' -c -I '/Users/miloniatal/.opam/5.0.0~alpha1/lib/llvm' -o scanner.cmx scanner.ml # cached
 # Target: semant.cmx, tags: { compile, extension:cmx, extension:ml, file:semant.cmx, file:semant.ml, implem, native, ocaml, quiet }
-'/Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamlopt.opt' -c -I '/Users/miloniatal/.opam/5.0.0~alpha1/lib/llvm' -o semant.cmx semant.ml
+'/Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamlopt.opt' -c -I '/Users/miloniatal/.opam/5.0.0~alpha1/lib/llvm' -o semant.cmx semant.ml # cached
 # Target: main.cmx, tags: { compile, extension:cmx, extension:ml, file:main.cmx, file:main.ml, implem, native, ocaml, quiet }
 '/Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamlopt.opt' -c -I '/Users/miloniatal/.opam/5.0.0~alpha1/lib/llvm' -o main.cmx main.ml # cached
 # Target: main.native, tags: { dont_link_with, extension:native, file:main.native, link, native, ocaml, program, quiet }
-'/Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamlopt.opt' -I '/Users/miloniatal/.opam/5.0.0~alpha1/lib/llvm' '/Users/miloniatal/.opam/5.0.0~alpha1/lib/llvm/shared/llvm.cmxa' ast.cmx coalaparse.cmx sast.cmx codegen.cmx scanner.cmx semant.cmx main.cmx -o main.native
+'/Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamlopt.opt' -I '/Users/miloniatal/.opam/5.0.0~alpha1/lib/llvm' '/Users/miloniatal/.opam/5.0.0~alpha1/lib/llvm/shared/llvm.cmxa' ast.cmx coalaparse.cmx sast.cmx codegen.cmx scanner.cmx semant.cmx main.cmx -o main.native # cached
 # Compilation successful.

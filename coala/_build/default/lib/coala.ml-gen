@@ -6,6 +6,12 @@ module Ast = Coala__Ast
 (** @canonical Coala.Coalaparse *)
 module Coalaparse = Coala__Coalaparse
 
+(** @canonical Coala.Codegen *)
+module Codegen = Coala__Codegen
+
+(** @canonical Coala.Main *)
+module Main = Coala__Main
+
 (** @canonical Coala.Sast *)
 module Sast = Coala__Sast
 

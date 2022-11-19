@@ -1,8 +1,9 @@
 void main() {
     int x;
+    string s;
     x = 1;
-    print(s);
-    printi(x);
+    s = "a";
+    print(x);
     return;
 }
 

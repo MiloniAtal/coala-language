@@ -6,10 +6,16 @@ dune build
 ```
 or
 
-Building and executing:
+Building:
 ```
 dune build bin/main.exe
-dune exec bin/main.exe
+```
+
+Building Codegen IR and compiling with lli
+```
+dune exec -- bin/main.exe -l test/example.mc > test/example.out
+lli test/example.out
+
 ```
 
 ### Library files

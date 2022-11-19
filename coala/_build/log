@@ -1,9 +1,9 @@
-# dune exec bin/main.exe
+# dune exec -- bin/main.exe -l test/example.mc
 # OCAMLPARAM: unset
 # Shared cache: disabled
 # Workspace root: /Users/miloniatal/Downloads/PLT-code/coala-PLT/coala
 # Auto-detected concurrency: 8
-$ /Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamlc.opt -config > /var/folders/20/m34xjlm52n3d79h8q202jkd40000gn/T/dune_f6ba90_output
+$ /Users/miloniatal/.opam/5.0.0~alpha1/bin/ocamlc.opt -config > /var/folders/20/m34xjlm52n3d79h8q202jkd40000gn/T/dune_e597dc_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
