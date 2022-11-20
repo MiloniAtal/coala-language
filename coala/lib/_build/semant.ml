@@ -84,12 +84,13 @@ let check (globals, functions) =
 
     in
 
+    ignore(List.iter (fun (ty, name) -> Hashtbl.add symbol_table name ty) (globals @ func.formals));
 
-
+(* 
     (* Build local symbol table of variables for this function *)
     List.iter (*(fun (ty, name) -> Hashtbl.add symbol_table name ty)*) print_endline (globals @ func.formals)
         (* TODO: update symbol table upon seeing a declaration *)
-    in
+    in *)
 
     (* Return a variable from our local symbol table *)
     let type_of_identifier s =
@@ -157,7 +158,7 @@ let check (globals, functions) =
     let rec check_stmt_list =function
         [] -> []
       | Block sl :: sl'  -> check_stmt_list (sl @ sl') (* Flatten blocks *)
-      | s :: sl -> check_stmt s :: check_stmt_list sl
+      | s :: sl -> let checked_stmt = check_stmt s in checked_stmt :: check_stmt_list sl
     (* Return a semantically-checked statement i.e. containing sexprs *)
     and check_stmt =function
       (* A block is correct if each statement is correct and nothing
@@ -169,6 +170,11 @@ let check (globals, functions) =
       | While(e, st) ->
         SWhile(check_bool_expr e, check_stmt st)
       | Declare(ty, s) -> ignore (check_declare ty s); ignore (Hashtbl.add symbol_table s ty); SDeclare (ty, s)
+      | DeclareAndAssign(ty, s, e) ->
+          ignore (check_declare ty s);
+          ignore (Hashtbl.add symbol_table s ty);
+          let (t, e') = check_expr e in if (t != ty) then raise(Failure("hgfsda"));
+          SDeclareAndAssign(ty, s, (t,e'))
       | Return e ->
         let (t, e') = check_expr e in
         if t = func.rtyp then SReturn (t, e')

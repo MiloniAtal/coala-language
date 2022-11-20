@@ -19,6 +19,7 @@ type stmt =
   | While of expr * stmt
   | Return of expr
   | Declare of typ * string
+  | DeclareAndAssign of typ * string * expr
 
 type bind = typ * string
 
@@ -69,6 +70,7 @@ let rec string_of_stmt = function
                       string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
   | Declare(typ, s) -> string_of_typ typ ^ " " ^ s ^ ";\n"
+  | DeclareAndAssign(typ, s, e) -> string_of_typ typ ^ " " ^ s ^ " = " ^ string_of_expr e ^ ";\n"
 
 
 

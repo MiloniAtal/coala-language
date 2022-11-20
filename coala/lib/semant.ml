@@ -170,6 +170,11 @@ let check (globals, functions) =
       | While(e, st) ->
         SWhile(check_bool_expr e, check_stmt st)
       | Declare(ty, s) -> ignore (check_declare ty s); ignore (Hashtbl.add symbol_table s ty); SDeclare (ty, s)
+      | DeclareAndAssign(ty, s, e) ->
+          ignore (check_declare ty s);
+          ignore (Hashtbl.add symbol_table s ty);
+          let (t, e') = check_expr e in if (t != ty) then raise(Failure("hgfsda"));
+          SDeclareAndAssign(ty, s, (t,e'))
       | Return e ->
         let (t, e') = check_expr e in
         if t = func.rtyp then SReturn (t, e')

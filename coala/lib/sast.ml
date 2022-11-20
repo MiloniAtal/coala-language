@@ -22,6 +22,7 @@ type sstmt =
   (* return *)
   | SReturn of sexpr
   | SDeclare of typ * string
+  | SDeclareAndAssign of typ * string * sexpr
 
 (* func_def: ret_typ fname formals body *)
 type sfunc_def = {
@@ -60,7 +61,8 @@ let rec string_of_sstmt = function
   | SIf(e, s1, s2) ->  "if (" ^ string_of_sexpr e ^ ")\n" ^
                        string_of_sstmt s1 ^ "else\n" ^ string_of_sstmt s2
   | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
-  | SDeclare(e, s) -> string_of_typ e ^ " " ^ s ^ ";\n"
+  | SDeclare(ty, var) -> string_of_typ ty ^ " " ^ var ^ ";\n"
+  | SDeclareAndAssign(ty, var, e) -> string_of_typ ty ^ " " ^ var ^ " = " ^ string_of_sexpr e ^ ";\n"
 
 let string_of_sfdecl fdecl =
   string_of_typ fdecl.srtyp ^ " " ^

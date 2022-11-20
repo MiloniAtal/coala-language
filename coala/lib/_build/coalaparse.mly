@@ -80,7 +80,8 @@ stmt_rule:
   | IF LPAREN expr_rule RPAREN stmt_rule ELSE stmt_rule   { If ($3, $5, $7) }
   | WHILE LPAREN expr_rule RPAREN stmt_rule               { While ($3,$5)   }
   | RETURN expr_opt_rule SEMI                             { Return $2       }
-  | typ_rule ID SEMI                                       { Declare ($1, $2)      }
+  | typ_rule ID SEMI                                      { Declare ($1, $2)      }
+  | typ_rule ID ASSIGN expr_rule SEMI                     { DeclareAndAssign ($1, $2, $4)      }
 
 expr_opt_rule:
     /* nothing */ { Noexpr }
