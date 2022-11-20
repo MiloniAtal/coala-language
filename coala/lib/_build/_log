@@ -1,0 +1,32 @@
+### Starting build.
+# Target: main.ml.depends, tags: { extension:ml, file:main.ml, ocaml, ocamldep, quiet }
+'/home/srishti/.opam/5.0.0~alpha1/bin/ocamldep.opt' -modules main.ml > main.ml.depends # cached
+# Target: coalaparse.mly, tags: { extension:mly, file:coalaparse.mly, infer, ocaml, ocamlyacc, parser, quiet }
+'/home/srishti/.opam/5.0.0~alpha1/bin/ocamlyacc' coalaparse.mly # cached
+# Target: coalaparse.mli.depends, tags: { extension:mli, file:coalaparse.mli, ocaml, ocamldep, quiet }
+'/home/srishti/.opam/5.0.0~alpha1/bin/ocamldep.opt' -modules coalaparse.mli > coalaparse.mli.depends # cached
+# Target: ast.ml.depends, tags: { extension:ml, file:ast.ml, ocaml, ocamldep, quiet }
+'/home/srishti/.opam/5.0.0~alpha1/bin/ocamldep.opt' -modules ast.ml > ast.ml.depends # cached
+# Target: ast.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:ast.cmo, file:ast.ml, implem, ocaml, quiet }
+'/home/srishti/.opam/5.0.0~alpha1/bin/ocamlc.opt' -c -o ast.cmo ast.ml # cached
+# Target: coalaparse.cmi, tags: { byte, compile, extension:mli, file:coalaparse.mli, interf, ocaml, quiet }
+'/home/srishti/.opam/5.0.0~alpha1/bin/ocamlc.opt' -c -o coalaparse.cmi coalaparse.mli # cached
+# Target: sast.ml.depends, tags: { extension:ml, file:sast.ml, ocaml, ocamldep, quiet }
+'/home/srishti/.opam/5.0.0~alpha1/bin/ocamldep.opt' -modules sast.ml > sast.ml.depends # cached
+# Target: sast.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:sast.cmo, file:sast.ml, implem, ocaml, quiet }
+'/home/srishti/.opam/5.0.0~alpha1/bin/ocamlc.opt' -c -o sast.cmo sast.ml # cached
+# Target: scanner.mll, tags: { extension:mll, file:scanner.mll, lexer, ocaml, ocamllex, quiet }
+'/home/srishti/.opam/5.0.0~alpha1/bin/ocamllex.opt' -q scanner.mll # cached
+# Target: scanner.ml.depends, tags: { extension:ml, file:scanner.ml, ocaml, ocamldep, quiet }
+'/home/srishti/.opam/5.0.0~alpha1/bin/ocamldep.opt' -modules scanner.ml > scanner.ml.depends # cached
+# Target: scanner.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:scanner.cmo, file:scanner.ml, implem, ocaml, quiet }
+'/home/srishti/.opam/5.0.0~alpha1/bin/ocamlc.opt' -c -o scanner.cmo scanner.ml # cached
+# Target: semant.ml.depends, tags: { extension:ml, file:semant.ml, ocaml, ocamldep, quiet }
+'/home/srishti/.opam/5.0.0~alpha1/bin/ocamldep.opt' -modules semant.ml > semant.ml.depends
++ '/home/srishti/.opam/5.0.0~alpha1/bin/ocamldep.opt' -modules semant.ml > semant.ml.depends
+File "semant.ml", line 184, characters 2-4:
+184 |   in
+        ^^
+Error: Syntax error
+Command exited with code 2.
+# Compilation unsuccessful.
