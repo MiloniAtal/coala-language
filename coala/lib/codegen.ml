@@ -31,7 +31,7 @@ let translate (globals, functions) =
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context
   and void_t     = L.void_type   context 
-  and string_t    = L.array_type (L.i8_type context) 3 in
+  and string_t   = L.pointer_type (L.i8_type context)  in
 
   (* Return the LLVM type for a MicroC type *)
   let ltype_of_typ = function
@@ -104,7 +104,7 @@ let translate (globals, functions) =
         SLiteral i  -> L.const_int i32_t i
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
     (* TODO: CHECK THIS *)
-      | SStringLit s -> L.const_string context s
+      | SStringLit s -> L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder
       | SNoexpr     -> L.const_int i32_t 0
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = build_expr builder e in
@@ -124,6 +124,9 @@ let translate (globals, functions) =
       | SCall ("print", [e]) ->
         L.build_call printf_func [| int_format_str ; (build_expr builder e) |]
           "printf" builder
+      | SCall ("prints", [e]) ->
+            L.build_call printf_func [|(build_expr builder e) |]
+              "printf" builder
       | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in
