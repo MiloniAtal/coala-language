@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ; ModuleID = 'MicroC'
 source_filename = "MicroC"
 
@@ -23,3 +24,5 @@ entry:
   %printf6 = call i32 (i8*, ...) @printf(i8* %r5)
   ret void
 }
+=======
+>>>>>>> 946b7cacf40550b04fb26aeb84db95595530ba57
