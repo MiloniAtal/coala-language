@@ -1,3 +1,7 @@
-(test
- (name coala)
- (libraries llvm))
+(rule
+ (alias runtest)
+ (deps
+  (alias ../all)
+  (source_tree tests)
+ )
+ (action (run ./testall.sh -k)))
