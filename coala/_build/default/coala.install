@@ -1,8 +1,0 @@
-lib: [
-  "_build/install/default/lib/coala/META"
-  "_build/install/default/lib/coala/dune-package"
-  "_build/install/default/lib/coala/opam"
-]
-bin: [
-  "_build/install/default/bin/coala"
-]

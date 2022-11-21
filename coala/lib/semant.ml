@@ -25,6 +25,13 @@ let check (globals, functions) =
     in dups (List.sort (fun (_,a) (_,b) -> compare a b) binds)
   in
 
+  (* Verify a declaration has no void type*)
+  let check_declare (ty : typ) (s : string) =
+  match ty with
+	| Void -> raise (Failure ("illegal void " ^ (string_of_typ ty) ^ " " ^ s))
+  | _ -> ()
+  in
+
   (* Make sure no globals duplicate *)
   check_binds "global" globals;
 
@@ -33,10 +40,9 @@ let check (globals, functions) =
     let add_bind map (name, ty) = StringMap.add name {
       rtyp = Void;
       fname = name; 
-      formals = [(ty, "x")];
-      locals = []; body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("print", String);
-			                         ("printi", Int);]
+      formals = [(ty, "x")]; body = [] } map
+    in List.fold_left add_bind StringMap.empty [ ("print", Int);
+			                         ("prints", String);]
   in
 
   (* Add function name to symbol table *)
@@ -64,9 +70,9 @@ let check (globals, functions) =
   let _ = find_func "main" in (* Ensure "main" is defined *)
 
   let check_func func =
-    (* Make sure no formals or locals are void or duplicates *)
+    (* Make sure no formals are void or duplicates *)
     check_binds "formal" func.formals;
-    check_binds "local" func.locals;
+    (* TODO: make sure no declarations are void or duplicates *)
 
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
@@ -74,14 +80,21 @@ let check (globals, functions) =
       if lvaluet = rvaluet then lvaluet else raise (Failure err)
     in
 
-    (* Build local symbol table of variables for this function *)
-    let symbols = List.fold_left (fun m (ty, name) -> StringMap.add name ty m)
-        StringMap.empty (globals @ func.formals @ func.locals )
+    let symbol_table = Hashtbl.create 1234567
+
     in
+
+    ignore(List.iter (fun (ty, name) -> Hashtbl.add symbol_table name ty) (globals @ func.formals));
+
+(* 
+    (* Build local symbol table of variables for this function *)
+    List.iter (*(fun (ty, name) -> Hashtbl.add symbol_table name ty)*) print_endline (globals @ func.formals)
+        (* TODO: update symbol table upon seeing a declaration *)
+    in *)
 
     (* Return a variable from our local symbol table *)
     let type_of_identifier s =
-      try StringMap.find s symbols
+      try Hashtbl.find symbol_table s
       with Not_found -> raise (Failure ("undeclared identifier " ^ s))
     in
 
@@ -145,7 +158,7 @@ let check (globals, functions) =
     let rec check_stmt_list =function
         [] -> []
       | Block sl :: sl'  -> check_stmt_list (sl @ sl') (* Flatten blocks *)
-      | s :: sl -> check_stmt s :: check_stmt_list sl
+      | s :: sl -> let checked_stmt = check_stmt s in checked_stmt :: check_stmt_list sl
     (* Return a semantically-checked statement i.e. containing sexprs *)
     and check_stmt =function
       (* A block is correct if each statement is correct and nothing
@@ -156,6 +169,12 @@ let check (globals, functions) =
         SIf(check_bool_expr e, check_stmt st1, check_stmt st2)
       | While(e, st) ->
         SWhile(check_bool_expr e, check_stmt st)
+      | Declare(ty, s) -> ignore (check_declare ty s); ignore (Hashtbl.add symbol_table s ty); SDeclare (ty, s)
+      | DeclareAndAssign(ty, s, e) ->
+          ignore (check_declare ty s);
+          ignore (Hashtbl.add symbol_table s ty);
+          let (t, e') = check_expr e in if (t != ty) then raise(Failure("hgfsda"));
+          SDeclareAndAssign(ty, s, (t,e'))
       | Return e ->
         let (t, e') = check_expr e in
         if t = func.rtyp then SReturn (t, e')
@@ -166,7 +185,6 @@ let check (globals, functions) =
     { srtyp = func.rtyp;
       sfname = func.fname;
       sformals = func.formals;
-      slocals  = func.locals;
       sbody = check_stmt_list func.body
     }
   in

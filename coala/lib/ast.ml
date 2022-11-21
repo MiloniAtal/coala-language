@@ -18,6 +18,8 @@ type stmt =
   | If of expr * stmt * stmt
   | While of expr * stmt
   | Return of expr
+  | Declare of typ * string
+  | DeclareAndAssign of typ * string * expr
 
 type bind = typ * string
 
@@ -25,7 +27,6 @@ type func_def = {
   rtyp: typ;
   fname: string;
   formals: bind list;
-  locals: bind list;
   body: stmt list;
 }
 
@@ -54,6 +55,11 @@ let rec string_of_expr = function
     f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Noexpr -> ""
 
+let string_of_typ = function
+    Int -> "int"
+  | String -> "string"
+  | Bool -> "bool"
+  | Void -> "void"
 
 let rec string_of_stmt = function
     Block(stmts) ->
@@ -63,12 +69,10 @@ let rec string_of_stmt = function
   | If(e, s1, s2) ->  "if (" ^ string_of_expr e ^ ")\n" ^
                       string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
+  | Declare(typ, s) -> string_of_typ typ ^ " " ^ s ^ ";\n"
+  | DeclareAndAssign(typ, s, e) -> string_of_typ typ ^ " " ^ s ^ " = " ^ string_of_expr e ^ ";\n"
 
-let string_of_typ = function
-    Int -> "int"
-  | String -> "string"
-  | Bool -> "bool"
-  | Void -> "void"
+
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
@@ -76,7 +80,6 @@ let string_of_fdecl fdecl =
   string_of_typ fdecl.rtyp ^ " " ^
   fdecl.fname ^ "(" ^ String.concat ", " (List.map snd fdecl.formals) ^
   ")\n{\n" ^
-  String.concat "" (List.map string_of_vdecl fdecl.locals) ^
   String.concat "" (List.map string_of_stmt fdecl.body) ^
   "}\n"
 

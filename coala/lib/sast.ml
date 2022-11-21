@@ -21,13 +21,14 @@ type sstmt =
   | SWhile of sexpr * sstmt
   (* return *)
   | SReturn of sexpr
+  | SDeclare of typ * string
+  | SDeclareAndAssign of typ * string * sexpr
 
-(* func_def: ret_typ fname formals locals body *)
+(* func_def: ret_typ fname formals body *)
 type sfunc_def = {
   srtyp: typ;
   sfname: string;
   sformals: bind list;
-  slocals: bind list;
   sbody: sstmt list;
 }
 
@@ -60,12 +61,13 @@ let rec string_of_sstmt = function
   | SIf(e, s1, s2) ->  "if (" ^ string_of_sexpr e ^ ")\n" ^
                        string_of_sstmt s1 ^ "else\n" ^ string_of_sstmt s2
   | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
+  | SDeclare(ty, var) -> string_of_typ ty ^ " " ^ var ^ ";\n"
+  | SDeclareAndAssign(ty, var, e) -> string_of_typ ty ^ " " ^ var ^ " = " ^ string_of_sexpr e ^ ";\n"
 
 let string_of_sfdecl fdecl =
   string_of_typ fdecl.srtyp ^ " " ^
   fdecl.sfname ^ "(" ^ String.concat ", " (List.map snd fdecl.sformals) ^
   ")\n{\n" ^
-  String.concat "" (List.map string_of_vdecl fdecl.slocals) ^
   String.concat "" (List.map string_of_sstmt fdecl.sbody) ^
   "}\n"
 
