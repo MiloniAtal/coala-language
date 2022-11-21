@@ -1,11 +1,14 @@
+int fun(int a){
+    int x = 3;
+    print(x);
+}
+
 void main() {
-    int x;
-    x = 1;
-    string s;
-    s = "c";
-    string x;
-    string x = "ab";
-    string s = "ab";
+    int x = 1;
+    print(x);
+    string s = "coala";
+    prints(s);
+    fun(1);
     return;
 }
 
