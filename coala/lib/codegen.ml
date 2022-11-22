@@ -24,7 +24,7 @@ let translate (globals, functions) =
 
   (* Create the LLVM compilation module into which
      we will generate code *)
-  let the_module = L.create_module context "MicroC" in
+  let the_module = L.create_module context "Coala" in
 
   (* Get types from the context *)
   let i32_t      = L.i32_type    context
@@ -33,7 +33,7 @@ let translate (globals, functions) =
   and void_t     = L.void_type   context 
   and string_t   = L.pointer_type (L.i8_type context)  in
 
-  (* Return the LLVM type for a MicroC type *)
+  (* Return the LLVM type for a Coala type *)
   let ltype_of_typ = function
       A.Int   -> i32_t
     | A.Bool  -> i1_t
