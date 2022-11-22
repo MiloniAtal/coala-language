@@ -11,10 +11,16 @@ Building:
 dune build bin/main.exe
 ```
 
-Building Codegen IR and compiling with lli
+Building Codegen IR and compiling with lli:
 ```
 dune exec -- bin/main.exe -l test/example.mc > test/example.out
 lli test/example.out
+
+```
+
+Testing:
+```
+dune test
 
 ```
 
