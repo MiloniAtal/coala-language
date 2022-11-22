@@ -173,7 +173,8 @@ let check (globals, functions) =
       | DeclareAndAssign(ty, s, e) ->
           ignore (check_declare ty s);
           ignore (Hashtbl.add symbol_table s ty);
-          let (t, e') = check_expr e in if (t != ty) then raise(Failure("hgfsda"));
+          let (t, e') = check_expr e in if (t != ty) then raise(Failure("type mismatch"));
+          (* TODO: Better error message*)
           SDeclareAndAssign(ty, s, (t,e'))
       | Return e ->
         let (t, e') = check_expr e in
