@@ -36,13 +36,13 @@ Usage() {
     exit 1
 }
 
-SignalError() {
-    if [ $error -eq 0 ] ; then
-	echo "FAILED"
-	error=1
-    fi
-    echo "  $1"
-}
+# SignalError() {
+#     if [ $error -eq 0 ] ; then
+# 	echo "FAILED"
+# 	error=1
+#     fi
+#     echo "  $1"
+# }
 
 # Compare <outfile> <reffile> <difffile>
 # Compares the outfile with reffile.  Differences, if any, written to difffile
@@ -90,24 +90,16 @@ Check() {
 
     generatedfiles=""
 
-    generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
-    Run "$COALA" "$1" ">" "${basename}.ll" &&
-    Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
-    Run "$CC" "-o" "${basename}.exe" "${basename}.s" &&
-    Run "./${basename}.exe" > "${basename}.out" &&
-    Compare ${basename}.out ${reffile}.out ${basename}.diff
-
-    # Report the status and clean up the generated files
-
-    if [ $error -eq 0 ] ; then
-	if [ $keep -eq 0 ] ; then
-	    rm -f $generatedfiles
-	fi
-	echo "OK"
-	echo "###### SUCCESS" 1>&2
-    else
-	echo "###### FAILED" 1>&2
-	globalerror=$error
+    generatedfiles="$generatedfiles ${basename}-temp.out ${basename}.out" &&
+    Run "$COALA" "-l" "tests/${basename}.mc" ">" "${basename}-temp.out" &&
+    Run "$LLI" "${basename}-temp.out" ">" "${basename}.out"
+    # Compare "${basename}.out" "tests/${basename}.out" "${basename}.diff"
+    Run diff -s "${basename}.out" "tests/${basename}.out" > /dev/null
+    if [ $? -eq 0 ]; then
+        echo "OK"
+        echo "###### SUCCESS" 1>&2
+        else
+        echo "###### FAILED" 1>&2
     fi
 }
 
