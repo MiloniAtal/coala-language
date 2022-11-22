@@ -1,36 +1,43 @@
-### Build the Coala parser
+# Coala Language Compiler Frontend
 
-```
-cd coala
-dune build
-```
-or
+![alt text](https://github.com/MiloniAtal/coala-PLT/blob/main/coala.jpg)
 
-Building:
-```
-dune build bin/main.exe
-```
+This repository contains the compiler frontend to translate a program written in the language Coala, to LLVM IR. This is a project for the course COMS W 4115 Programming Languages and Translators, Fall 2022, Columbia University, under the guidance of Professor Ronghui Gu and our mentor, Zixuan Zhang.
 
-Building Codegen IR and compiling with lli:
-```
-dune exec -- bin/main.exe -l test/example.mc > test/example.out
-lli test/example.out
+Coala is a new language we have developed, whose main focus is to provide garbage collection. It will try to unburden the programmer from the task of de-allocating unused memory. We want Coala to have this feature in an attempt to make a piece of code robust to memory leaks, irrespective of whether it was carefully written or not. By freeing the programmers from manual memory management, it will not only make their task easy but will also reduce the length of written code, which is always beneficial, especially in large software codebases.
 
-```
+Coala is an imperative language. It is strongly and statically typed, and has static scopes and a strict evaluation order.
 
-Testing:
-```
-dune test
+## File structure:
 
-```
+    |- coala
+        |- bin
+            |- main.ml
+            |- dune
 
-### Library files
--  `ast.ml`: abstract syntax tree (AST)
--  `scanner.mll`: scanner
--  `coalaparse.mly`: parser
+        |- lib
+            |- ast.ml
+            |- coalaparse.mly
+            |- codegen.ml
+            |- sast.ml
+            |- scanner.ml
+            |- semant.ml
 
-### Other files
+        |- test
+            |- tests
+            |- testall.sh
+            |- dune
 
-- `main.ml`: top-level file to run the scanner and parser
-- `example.mc`: a sample Coala source code
-- `example.out`: a sample parsed code of example.mc
+
+    The coala/lib contains the main scanner, parser, semant, sast, ast and codegen files. The coala/bin contains the main file used to run the compiler. 
+    The coala/test/tests contain all the test cases. 
+
+## Method to run:
+    1. Install llvm, dune
+    2. Clone the repository or download the code
+    3. Move into coala folder
+    4. Run:
+        dune build bin/main.exe 
+        dune exec -- bin/main.exe [options] [inputfile] > [outputfile]
+        lli [outputfile]
+
