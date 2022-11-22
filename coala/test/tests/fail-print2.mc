@@ -1,6 +1,6 @@
 void main(){
     string s;
-    s = "coala";
+    s = "coala!!";
     print(s);
     return;
 }
