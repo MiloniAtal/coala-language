@@ -4,13 +4,13 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE QUOTES PLUS MINUS MODULO MULT DIV ASSIGN 
+%token SEMI LPAREN RPAREN LBRACE RBRACE SQLBRACE SQRBRACE QUOTES PLUS MINUS MODULO MULT DIV ASSIGN 
 %token EQ NEQ LEQ GEQ LT GT AND OR
-%token IF ELSE WHILE INT STRING CHAR BOOL FLOAT VOID
+%token IF ELSE WHILE INT STRING CHAR BOOL FLOAT VOID ARRAY
 %token RETURN COMMA
 %token <int> LITERAL
 %token <bool> BLIT
-%token <string> SLIT FLIT CLIT
+%token <string> SLIT ALIT FLIT CLIT
 %token <string> ID
 %token EOF
 
@@ -27,6 +27,7 @@ open Ast
 %left MULT DIV
 
 %%
+
 
 program_rule:
   decl_rule EOF { $1 }
@@ -51,6 +52,7 @@ typ_rule:
   | FLOAT { Float }
   | BOOL    { Bool }
   | VOID    { Void}
+  | ARRAY  LT typ_rule COMMA LITERAL GT { Array($3, $5)}
 
 /* fdecl_rule */
 fdecl_rule:
@@ -91,6 +93,21 @@ expr_opt_rule:
     /* nothing */ { Noexpr }
   | expr_rule          { $1 }
 
+array_int_list_rule:
+  /* nothing */               { []     }
+  | LITERAL            { [$1] }
+  | LITERAL COMMA array_int_list_rule  { $1::$3 }
+
+array_string_list_rule:
+  /* nothing */               { []     }
+  | SLIT            { [$1] }
+  | SLIT COMMA array_string_list_rule  { $1::$3 }
+
+array_bool_list_rule:
+  /* nothing */               { []     }
+  | BLIT            { [$1] }
+  | BLIT COMMA array_bool_list_rule  { $1::$3 }
+
 expr_rule:
   | BLIT                          { BoolLit $1            }
   | LITERAL                       { Literal $1            }
@@ -114,6 +131,9 @@ expr_rule:
   | ID ASSIGN expr_rule           { Assign ($1, $3)       }
   | LPAREN expr_rule RPAREN       { $2                    }
   | ID LPAREN args_opt_rule RPAREN     { Call ($1, $3)         }
+  | SQLBRACE array_int_list_rule SQRBRACE { ArrayIntLit $2 }
+  | SQLBRACE array_bool_list_rule SQRBRACE { ArrayBoolLit $2 }
+  | SQLBRACE array_string_list_rule SQRBRACE { ArrayStringLit $2 }
 
 /* args_opt_rule*/
 args_opt_rule:

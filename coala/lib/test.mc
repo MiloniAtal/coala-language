@@ -1,6 +1,6 @@
 void main(){
-  float a;
-  a = -3.115;
-  printf(a);
-  return;
+    float f;
+    f = -3.115;
+    printf(f);
+    return;
 }
