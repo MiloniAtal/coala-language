@@ -12,9 +12,9 @@ and sx =
   | SId of string
   | SBinop of sexpr * bop * sexpr
   | SAssign of string * sexpr
-  | SArrayIntLit of int list * int
-  | SArrayStringLit of string list * int
-  | SArrayBoolLit of bool list * int
+  | SArrayIntLit of int list
+  | SArrayStringLit of string list 
+  | SArrayBoolLit of bool list
   (* call *)
   | SCall of string * sexpr list
   | SNoexpr
@@ -54,9 +54,9 @@ let rec string_of_sexpr (t, e) =
       | SBinop(e1, o, e2) ->
         string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
       | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
-      | SArrayStringLit (el,size)-> "string" ^ string_of_int size ^ "[" ^ ((String.concat ", " (el))) ^ "]"
-      | SArrayIntLit (el, size) -> "int " ^ string_of_int size ^ "[" ^ (String.concat ", " (List.map string_of_int el)) ^ "]"
-      | SArrayBoolLit (el, size) -> "bool" ^ string_of_int size ^ "[" ^ (String.concat ", " (List.map string_of_bool el))^ "]"
+      | SArrayStringLit (el)-> "string " ^  "[" ^ ((String.concat ", " (el))) ^ "]"
+      | SArrayIntLit (el) -> "int " ^ "[" ^ (String.concat ", " (List.map string_of_int el)) ^ "]"
+      | SArrayBoolLit (el) -> "bool " ^ "[" ^ (String.concat ", " (List.map string_of_bool el))^ "]"
       | SCall(f, el) ->
           f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
       | SNoexpr -> ""
