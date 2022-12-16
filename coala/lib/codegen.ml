@@ -15,8 +15,6 @@
 module L = Llvm
 module A = Ast
 open Sast
-open String
-
 module StringMap = Map.Make(String)
 
 (* translate : Sast.program -> Llvm.module *)
@@ -34,18 +32,18 @@ let translate (globals, functions) =
   and void_t     = L.void_type   context 
   and string_t   = L.pointer_type (L.i8_type context) in
 
-  let array_of_int_t = L.pointer_type i32_t
-  and array_of_bool_t = L.pointer_type i1_t
-  and array_of_string_t = L.pointer_type string_t in
+  let array_of_int_t = L.array_type i32_t
+  and array_of_bool_t = L.array_type i1_t
+  and array_of_string_t = L.array_type string_t in
 
   (* Return the LLVM type for a Coala type *)
   let ltype_of_typ = function
       A.Int   -> i32_t
     | A.Bool  -> i1_t
     | A.String -> string_t
-    | A.Array(A.Int, _) -> array_of_int_t
-    | A.Array(A.Bool, _) -> array_of_bool_t
-    | A.Array(A.String, _) -> array_of_string_t
+    | A.Array(A.Int, size) -> array_of_int_t size
+    | A.Array(A.Bool, size) -> array_of_bool_t size
+    | A.Array(A.String, size) -> array_of_string_t size
     | A.Array(_, _) -> raise (Failure ("illegal array"))
     | A.Void -> void_t
   in
@@ -113,9 +111,10 @@ let translate (globals, functions) =
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
     (* TODO: CHECK THIS *)
       | SStringLit s -> L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder
-      | SArrayIntLit l -> L.const_array i32_t l
-      | SArrayBoolLit l -> L.const_array i1_t l
-      | SArrayStringLit l -> L.const_array string_t l
+      | SArrayIntLit l -> L.const_array i32_t (Array.map (L.const_int i32_t) (Array.of_list l))
+      | SArrayBoolLit l -> let bool_of_int b = L.const_int i1_t (if b then 1 else 0) in L.const_array i1_t (Array.map (bool_of_int) (Array.of_list l))
+      | SArrayStringLit l -> let string_helper s = L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder in 
+                          L.const_array i32_t (Array.map (string_helper) (Array.of_list l))
       | SNoexpr     -> L.const_int i32_t 0
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = build_expr builder e in
