@@ -179,7 +179,7 @@ let check (globals, functions) =
       | DeclareAndAssign(ty, s, e) ->
           ignore (check_declare ty s);
           ignore (Hashtbl.add symbol_table s ty);
-          let (t, e') = check_expr e in if (t != ty) then raise(Failure("type mismatch " ^ string_of_typ t ^ ";" ^ string_of_typ ty ));
+          let (t, e') = check_expr e in if (t <> ty) then raise(Failure("type mismatch aa" ^ string_of_typ t ^ "aa;bb" ^ string_of_typ ty ^ "bb"));
           (* TODO: Better error message*)
           SDeclareAndAssign(ty, s, (t,e'))
       | Return e ->

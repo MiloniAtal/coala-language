@@ -15,6 +15,7 @@
 module L = Llvm
 module A = Ast
 open Sast
+open String
 
 module StringMap = Map.Make(String)
 
@@ -32,8 +33,12 @@ let translate (globals, functions) =
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
   and void_t     = L.void_type   context 
-  and string_t   = L.pointer_type (L.i8_type context) 
-  and char_t   = L.pointer_type (L.i8_type context)  in
+  and char_t   = L.pointer_type (L.i8_type context)
+  and string_t   = L.pointer_type (L.i8_type context) in
+
+  let array_of_int_t = L.pointer_type i32_t
+  and array_of_bool_t = L.pointer_type i1_t
+  and array_of_string_t = L.pointer_type string_t in
 
   (* Return the LLVM type for a Coala type *)
   let ltype_of_typ = function
@@ -42,6 +47,10 @@ let translate (globals, functions) =
     | A.String -> string_t
     | A.Char -> char_t
     | A.Float -> float_t
+    | A.Array(A.Int, _) -> array_of_int_t
+    | A.Array(A.Bool, _) -> array_of_bool_t
+    | A.Array(A.String, _) -> array_of_string_t
+    | A.Array(_, _) -> raise (Failure ("illegal array"))
     | A.Void -> void_t
   in
 
@@ -113,6 +122,9 @@ let translate (globals, functions) =
       | SCharLit s  -> L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder
     (* TODO: CHECK THIS *)
       | SStringLit s -> L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder
+      | SArrayIntLit l -> L.const_array i32_t l
+      | SArrayBoolLit l -> L.const_array i1_t l
+      | SArrayStringLit l -> L.const_array string_t l
       | SNoexpr     -> L.const_int i32_t 0
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = build_expr builder e in
