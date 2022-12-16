@@ -103,9 +103,9 @@ let check (globals, functions) =
         Literal l -> (Int, SLiteral l)
       | BoolLit l -> (Bool, SBoolLit l)
       | StringLit l -> (String, SStringLit l)
-      | ArrayStringLit l -> (String, SArrayStringLit(l, (List.length l)) )
-      | ArrayIntLit l -> (Int, SArrayIntLit(l, (List.length l)) )
-      | ArrayBoolLit l -> (Bool, SArrayBoolLit(l, (List.length l)) )
+      | ArrayStringLit l -> (Array(String,(List.length l) ), SArrayStringLit l )
+      | ArrayIntLit l -> (Array(Int,(List.length l) ), SArrayIntLit l )
+      | ArrayBoolLit l -> (Array(Bool,(List.length l) ), SArrayBoolLit l )
       | Id var -> (type_of_identifier var, SId var)
       | Noexpr -> (Void, SNoexpr)
       | Assign(var, e) as ex ->
@@ -176,7 +176,7 @@ let check (globals, functions) =
       | DeclareAndAssign(ty, s, e) ->
           ignore (check_declare ty s);
           ignore (Hashtbl.add symbol_table s ty);
-          let (t, e') = check_expr e in if (t != ty) then raise(Failure("type mismatch"));
+          let (t, e') = check_expr e in if (t != ty) then raise(Failure("type mismatch " ^ string_of_typ t ^ ";" ^ string_of_typ ty ));
           (* TODO: Better error message*)
           SDeclareAndAssign(ty, s, (t,e'))
       | Return e ->
