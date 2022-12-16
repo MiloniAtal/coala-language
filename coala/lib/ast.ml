@@ -69,7 +69,7 @@ let rec string_of_typ = function
   | String -> "string"
   | Bool -> "bool"
   | Void -> "void"
-  | Array( typ, size) -> "array" ^ "<" ^ (string_of_typ typ) ^ "," ^ string_of_int size  ^ ">" 
+  | Array(typ, size) -> "array" ^ "<" ^ (string_of_typ typ) ^ "," ^ string_of_int size ^ ">" 
 
 let rec string_of_stmt = function
     Block(stmts) ->
