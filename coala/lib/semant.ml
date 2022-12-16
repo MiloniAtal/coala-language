@@ -103,6 +103,9 @@ let check (globals, functions) =
         Literal l -> (Int, SLiteral l)
       | BoolLit l -> (Bool, SBoolLit l)
       | StringLit l -> (String, SStringLit l)
+      | ArrayStringLit l -> (String, SArrayStringLit(l, (List.length l)) )
+      | ArrayIntLit l -> (Int, SArrayIntLit(l, (List.length l)) )
+      | ArrayBoolLit l -> (Bool, SArrayBoolLit(l, (List.length l)) )
       | Id var -> (type_of_identifier var, SId var)
       | Noexpr -> (Void, SNoexpr)
       | Assign(var, e) as ex ->
