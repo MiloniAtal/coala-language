@@ -107,6 +107,7 @@ array_bool_list_rule:
   /* nothing */               { []     }
   | BLIT            { [$1] }
   | BLIT COMMA array_bool_list_rule  { $1::$3 }
+  
 
 expr_rule:
   | BLIT                          { BoolLit $1            }
