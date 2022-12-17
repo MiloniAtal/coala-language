@@ -4,6 +4,7 @@ void main(){
     printf(f);
     array<int, 1> T = [1];
     array<bool, 2> T = [true, false];
-    bool x = T[0];
+    string a = "2 + 4";
+    int x = T[a]; /* error comes */
     return;
 }
