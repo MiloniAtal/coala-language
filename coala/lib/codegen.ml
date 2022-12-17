@@ -106,7 +106,7 @@ let translate (globals, functions) =
     in
 
     (* Construct code for an expression; return its value *)
-    let rec build_expr builder ((ty, e) : sexpr) = match e with
+    let rec build_expr builder ((_, e) : sexpr) = match e with
         SLiteral i  -> L.const_int i32_t i
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
     (* TODO: CHECK THIS *)
@@ -115,15 +115,12 @@ let translate (globals, functions) =
       | SArrayBoolLit l -> let bool_of_int b = L.const_int i1_t (if b then 1 else 0) in L.const_array i1_t (Array.map (bool_of_int) (Array.of_list l))
       | SArrayStringLit l -> let string_helper s = L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder in 
                           L.const_array i32_t (Array.map (string_helper) (Array.of_list l))
-      | SArrayIndexLit (s, e) -> 
-        (match ty with
-        | A.Int -> let llv = (L.build_load (lookup s) s builder) in 
-          (match llv with
-            | array_of_int_t -> L.const_gep (build_expr builder e) llv
-            | array_of_string_t -> L.const_gep (build_expr builder e) llv
-            | array_of_bool_t -> L.const_gep (build_expr builder e) llv
-            | _ -> raise (Failure "unexpected .....")
-          )
+      | SArrayIndexLit (var, e) -> let (typ, _) = e in
+        (match typ with
+        | A.Int -> (*let llv = (L.build_load (lookup var) var builder) in *)
+          let index = (build_expr builder e) in
+          let gep = (L.build_in_bounds_gep (lookup var) [| L.const_int i32_t 0; index |] "index" builder) in L.build_load gep "array_access" builder 
+        | _ -> raise( Failure "Index should be an integer")
         )
       | SNoexpr     -> L.const_int i32_t 0
       | SId s       -> L.build_load (lookup s) s builder
