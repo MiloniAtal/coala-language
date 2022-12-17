@@ -13,6 +13,7 @@ type expr =
   | ArrayIntLit of int list
   | ArrayStringLit of string list
   | ArrayBoolLit of bool list
+  | ArrayIndexLit of string * expr
   | Noexpr
 (* 
   let list_of_string = function
@@ -62,6 +63,7 @@ let rec string_of_expr = function
   | ArrayIntLit(el) -> "[" ^ (String.concat ", " (List.map string_of_int el)) ^ "]"
   | ArrayStringLit(el) -> "[" ^ ((String.concat ", " (el))) ^ "]"
   | ArrayBoolLit(el) -> "[" ^ (String.concat ", " (List.map string_of_bool el))^ "]"
+  | ArrayIndexLit(s, e) -> s ^ "[" ^ string_of_expr e ^ "]"
   | Noexpr -> ""
 
 let rec string_of_typ = function
@@ -71,6 +73,9 @@ let rec string_of_typ = function
   | Void -> "void"
   | Array(typ, size) -> "array" ^ "<" ^ (string_of_typ typ) ^ "," ^ string_of_int size ^ ">" 
 
+let typ_of_array = function
+    Array(typ, _) -> typ
+  | _ -> raise(Failure "Invalid argument")
 let rec string_of_stmt = function
     Block(stmts) ->
     "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
