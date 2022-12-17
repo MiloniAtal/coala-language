@@ -182,6 +182,9 @@ let translate (globals, functions) =
       | SCall ("printf", [e]) -> 
                 L.build_call printf_func [| float_format_str ; (build_expr builder e) |]
                   "printf" builder
+      | SCall ("printb", [e]) ->
+        L.build_call printf_func [| int_format_str ; (build_expr builder e) |]
+          "printf" builder
       | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in
