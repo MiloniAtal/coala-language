@@ -134,6 +134,7 @@ expr_rule:
   | SQLBRACE array_int_list_rule SQRBRACE { ArrayIntLit $2 }
   | SQLBRACE array_bool_list_rule SQRBRACE { ArrayBoolLit $2 }
   | SQLBRACE array_string_list_rule SQRBRACE { ArrayStringLit $2 }
+  | ID SQLBRACE expr_rule SQRBRACE {ArrayIndexLit ($1, $3)}
 
 /* args_opt_rule*/
 args_opt_rule:
