@@ -110,10 +110,10 @@ let translate (globals, functions) =
         SLiteral i  -> L.const_int i32_t i
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
     (* TODO: CHECK THIS *)
-      | SStringLit s -> L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder
+      | SStringLit s -> L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder
       | SArrayIntLit l -> L.const_array i32_t (Array.map (L.const_int i32_t) (Array.of_list l))
       | SArrayBoolLit l -> let bool_of_int b = L.const_int i1_t (if b then 1 else 0) in L.const_array i1_t (Array.map (bool_of_int) (Array.of_list l))
-      | SArrayStringLit l -> let string_helper s = L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder in 
+      | SArrayStringLit l -> let string_helper s = L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder in 
                           L.const_array i32_t (Array.map (string_helper) (Array.of_list l))
       | SNoexpr     -> L.const_int i32_t 0
       | SId s       -> L.build_load (lookup s) s builder
