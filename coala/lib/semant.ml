@@ -106,7 +106,10 @@ let check (globals, functions) =
       | ArrayStringLit l -> (Array(String,(List.length l) ), SArrayStringLit l )
       | ArrayIntLit l -> (Array(Int,(List.length l) ), SArrayIntLit l )
       | ArrayBoolLit l -> (Array(Bool,(List.length l) ), SArrayBoolLit l )
-      | ArrayIndexLit (var, e) -> (typ_of_array (type_of_identifier var), SArrayIndexLit(check_expr e))
+      | ArrayIndexLit (var, e) -> let (ty, e') = check_expr e in 
+          (match ty with
+          | Int ->  (typ_of_array (type_of_identifier var), SArrayIndexLit (var, (ty, e')))
+          | _ -> raise (Failure "invalid index type; not an int"))
       | Id var -> (type_of_identifier var, SId var)
       | Noexpr -> (Void, SNoexpr)
       | Assign(var, e) as ex ->

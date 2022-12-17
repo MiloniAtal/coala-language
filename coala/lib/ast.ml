@@ -75,7 +75,7 @@ let rec string_of_typ = function
 
 let typ_of_array = function
     Array(typ, _) -> typ
-  | _ -> raise(Failure "Invalid argument")
+  | _ -> raise(Failure "not an array")
 let rec string_of_stmt = function
     Block(stmts) ->
     "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"

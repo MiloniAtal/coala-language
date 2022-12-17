@@ -13,7 +13,7 @@ and sx =
   | SArrayIntLit of int list
   | SArrayStringLit of string list 
   | SArrayBoolLit of bool list
-  | SArrayIndexLit of sexpr
+  | SArrayIndexLit of string * sexpr
   | SCall of string * sexpr list
   | SNoexpr
 
@@ -53,7 +53,7 @@ let rec string_of_sexpr (t, e) =
       | SArrayStringLit (el)-> "string " ^  "[" ^ ((String.concat ", " (el))) ^ "]"
       | SArrayIntLit (el) -> "int " ^ "[" ^ (String.concat ", " (List.map string_of_int el)) ^ "]"
       | SArrayBoolLit (el) -> "bool " ^ "[" ^ (String.concat ", " (List.map string_of_bool el))^ "]"
-      | SArrayIndexLit (e) -> string_of_sexpr e
+      | SArrayIndexLit (var, e) -> var ^ "[" ^ (string_of_sexpr e) ^ "]"
       | SCall(f, el) ->
           f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
       | SNoexpr -> ""
