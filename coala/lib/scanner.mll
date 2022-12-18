@@ -53,7 +53,7 @@ rule token = parse
 | "array"   { ARRAY }
 | letter (digit | letter | '_')* as lem { ID(lem) }
 | ('-'digits | digits) '.'  digit* ( ['e' 'E'] ['+' '-']? digits )? as lxm { FLIT(lxm) }
-| quotes _* quotes as lem { SLIT(lem) }
+| quotes [^'"']* quotes as lem { SLIT(lem) }
 | squotes _* squotes as lem { CLIT(lem) }
 (* | "[" ( space arrayele space ",")* space arrayele space "]" as alem { ALIT( alem)} *)
 

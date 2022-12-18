@@ -1,0 +1,1386 @@
+   0  $accept : %entry% $end
+
+   1  program_rule : decl_rule EOF
+
+   2  decl_rule :
+   3            | vdecl_rule SEMI decl_rule
+   4            | fdecl_rule decl_rule
+
+   5  vdecl_list_rule :
+   6                  | vdecl_rule SEMI vdecl_list_rule
+
+   7  vdecl_rule : typ_rule ID
+
+   8  typ_rule : INT
+   9           | STRING
+  10           | BOOL
+  11           | VOID
+  12           | ARRAY LT typ_rule COMMA LITERAL GT
+
+  13  fdecl_rule : vdecl_rule LPAREN formals_opt_rule RPAREN LBRACE stmt_list_rule RBRACE
+
+  14  formals_opt_rule :
+  15                   | formals_list_rule
+
+  16  formals_list_rule : vdecl_rule
+  17                    | vdecl_rule COMMA formals_list_rule
+
+  18  stmt_list_rule :
+  19                 | stmt_rule stmt_list_rule
+
+  20  stmt_rule : expr_rule SEMI
+  21            | LBRACE stmt_list_rule RBRACE
+  22            | IF LPAREN expr_rule RPAREN stmt_rule ELSE stmt_rule
+  23            | WHILE LPAREN expr_rule RPAREN stmt_rule
+  24            | RETURN expr_opt_rule SEMI
+  25            | typ_rule ID SEMI
+  26            | typ_rule ID ASSIGN expr_rule SEMI
+
+  27  expr_opt_rule :
+  28                | expr_rule
+
+  29  array_int_list_rule :
+  30                      | LITERAL
+  31                      | LITERAL COMMA array_int_list_rule
+
+  32  array_string_list_rule :
+  33                         | SLIT
+  34                         | SLIT COMMA array_string_list_rule
+
+  35  array_bool_list_rule :
+  36                       | BLIT
+  37                       | BLIT COMMA array_bool_list_rule
+
+  38  expr_rule : BLIT
+  39            | LITERAL
+  40            | SLIT
+  41            | ID
+  42            | expr_rule PLUS expr_rule
+  43            | expr_rule MINUS expr_rule
+  44            | expr_rule EQ expr_rule
+  45            | expr_rule NEQ expr_rule
+  46            | expr_rule LT expr_rule
+  47            | expr_rule AND expr_rule
+  48            | expr_rule OR expr_rule
+  49            | ID ASSIGN expr_rule
+  50            | LPAREN expr_rule RPAREN
+  51            | ID LPAREN args_opt_rule RPAREN
+  52            | SQLBRACE array_int_list_rule SQRBRACE
+  53            | SQLBRACE array_bool_list_rule SQRBRACE
+  54            | SQLBRACE array_string_list_rule SQRBRACE
+  55            | ID SQLBRACE expr_rule SQRBRACE
+
+  56  args_opt_rule :
+  57                | args_rule
+
+  58  args_rule : expr_rule
+  59            | expr_rule COMMA args_rule
+
+  60  %entry% : '\001' program_rule
+
+state 0
+	$accept : . %entry% $end  (0)
+
+	'\001'  shift 1
+	.  error
+
+	%entry%  goto 2
+
+
+state 1
+	%entry% : '\001' . program_rule  (60)
+	decl_rule : .  (2)
+
+	INT  shift 3
+	STRING  shift 4
+	BOOL  shift 5
+	VOID  shift 6
+	ARRAY  shift 7
+	EOF  reduce 2
+
+	program_rule  goto 8
+	decl_rule  goto 9
+	vdecl_rule  goto 10
+	fdecl_rule  goto 11
+	typ_rule  goto 12
+
+
+state 2
+	$accept : %entry% . $end  (0)
+
+	$end  accept
+
+
+state 3
+	typ_rule : INT .  (8)
+
+	.  reduce 8
+
+
+state 4
+	typ_rule : STRING .  (9)
+
+	.  reduce 9
+
+
+state 5
+	typ_rule : BOOL .  (10)
+
+	.  reduce 10
+
+
+state 6
+	typ_rule : VOID .  (11)
+
+	.  reduce 11
+
+
+state 7
+	typ_rule : ARRAY . LT typ_rule COMMA LITERAL GT  (12)
+
+	LT  shift 13
+	.  error
+
+
+state 8
+	%entry% : '\001' program_rule .  (60)
+
+	.  reduce 60
+
+
+state 9
+	program_rule : decl_rule . EOF  (1)
+
+	EOF  shift 14
+	.  error
+
+
+state 10
+	decl_rule : vdecl_rule . SEMI decl_rule  (3)
+	fdecl_rule : vdecl_rule . LPAREN formals_opt_rule RPAREN LBRACE stmt_list_rule RBRACE  (13)
+
+	SEMI  shift 15
+	LPAREN  shift 16
+	.  error
+
+
+state 11
+	decl_rule : fdecl_rule . decl_rule  (4)
+	decl_rule : .  (2)
+
+	INT  shift 3
+	STRING  shift 4
+	BOOL  shift 5
+	VOID  shift 6
+	ARRAY  shift 7
+	EOF  reduce 2
+
+	decl_rule  goto 17
+	vdecl_rule  goto 10
+	fdecl_rule  goto 11
+	typ_rule  goto 12
+
+
+state 12
+	vdecl_rule : typ_rule . ID  (7)
+
+	ID  shift 18
+	.  error
+
+
+state 13
+	typ_rule : ARRAY LT . typ_rule COMMA LITERAL GT  (12)
+
+	INT  shift 3
+	STRING  shift 4
+	BOOL  shift 5
+	VOID  shift 6
+	ARRAY  shift 7
+	.  error
+
+	typ_rule  goto 19
+
+
+state 14
+	program_rule : decl_rule EOF .  (1)
+
+	.  reduce 1
+
+
+state 15
+	decl_rule : vdecl_rule SEMI . decl_rule  (3)
+	decl_rule : .  (2)
+
+	INT  shift 3
+	STRING  shift 4
+	BOOL  shift 5
+	VOID  shift 6
+	ARRAY  shift 7
+	EOF  reduce 2
+
+	decl_rule  goto 20
+	vdecl_rule  goto 10
+	fdecl_rule  goto 11
+	typ_rule  goto 12
+
+
+state 16
+	fdecl_rule : vdecl_rule LPAREN . formals_opt_rule RPAREN LBRACE stmt_list_rule RBRACE  (13)
+	formals_opt_rule : .  (14)
+
+	INT  shift 3
+	STRING  shift 4
+	BOOL  shift 5
+	VOID  shift 6
+	ARRAY  shift 7
+	RPAREN  reduce 14
+
+	vdecl_rule  goto 21
+	typ_rule  goto 12
+	formals_opt_rule  goto 22
+	formals_list_rule  goto 23
+
+
+state 17
+	decl_rule : fdecl_rule decl_rule .  (4)
+
+	.  reduce 4
+
+
+state 18
+	vdecl_rule : typ_rule ID .  (7)
+
+	.  reduce 7
+
+
+state 19
+	typ_rule : ARRAY LT typ_rule . COMMA LITERAL GT  (12)
+
+	COMMA  shift 24
+	.  error
+
+
+state 20
+	decl_rule : vdecl_rule SEMI decl_rule .  (3)
+
+	.  reduce 3
+
+
+state 21
+	formals_list_rule : vdecl_rule .  (16)
+	formals_list_rule : vdecl_rule . COMMA formals_list_rule  (17)
+
+	COMMA  shift 25
+	RPAREN  reduce 16
+
+
+state 22
+	fdecl_rule : vdecl_rule LPAREN formals_opt_rule . RPAREN LBRACE stmt_list_rule RBRACE  (13)
+
+	RPAREN  shift 26
+	.  error
+
+
+state 23
+	formals_opt_rule : formals_list_rule .  (15)
+
+	.  reduce 15
+
+
+state 24
+	typ_rule : ARRAY LT typ_rule COMMA . LITERAL GT  (12)
+
+	LITERAL  shift 27
+	.  error
+
+
+state 25
+	formals_list_rule : vdecl_rule COMMA . formals_list_rule  (17)
+
+	INT  shift 3
+	STRING  shift 4
+	BOOL  shift 5
+	VOID  shift 6
+	ARRAY  shift 7
+	.  error
+
+	vdecl_rule  goto 21
+	typ_rule  goto 12
+	formals_list_rule  goto 28
+
+
+state 26
+	fdecl_rule : vdecl_rule LPAREN formals_opt_rule RPAREN . LBRACE stmt_list_rule RBRACE  (13)
+
+	LBRACE  shift 29
+	.  error
+
+
+state 27
+	typ_rule : ARRAY LT typ_rule COMMA LITERAL . GT  (12)
+
+	GT  shift 30
+	.  error
+
+
+state 28
+	formals_list_rule : vdecl_rule COMMA formals_list_rule .  (17)
+
+	.  reduce 17
+
+
+state 29
+	fdecl_rule : vdecl_rule LPAREN formals_opt_rule RPAREN LBRACE . stmt_list_rule RBRACE  (13)
+	stmt_list_rule : .  (18)
+
+	LPAREN  shift 31
+	LBRACE  shift 32
+	SQLBRACE  shift 33
+	IF  shift 34
+	WHILE  shift 35
+	INT  shift 3
+	STRING  shift 4
+	BOOL  shift 5
+	VOID  shift 6
+	ARRAY  shift 7
+	RETURN  shift 36
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	RBRACE  reduce 18
+
+	typ_rule  goto 41
+	stmt_list_rule  goto 42
+	stmt_rule  goto 43
+	expr_rule  goto 44
+
+
+state 30
+	typ_rule : ARRAY LT typ_rule COMMA LITERAL GT .  (12)
+
+	.  reduce 12
+
+
+state 31
+	expr_rule : LPAREN . expr_rule RPAREN  (50)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 45
+
+
+state 32
+	stmt_rule : LBRACE . stmt_list_rule RBRACE  (21)
+	stmt_list_rule : .  (18)
+
+	LPAREN  shift 31
+	LBRACE  shift 32
+	SQLBRACE  shift 33
+	IF  shift 34
+	WHILE  shift 35
+	INT  shift 3
+	STRING  shift 4
+	BOOL  shift 5
+	VOID  shift 6
+	ARRAY  shift 7
+	RETURN  shift 36
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	RBRACE  reduce 18
+
+	typ_rule  goto 41
+	stmt_list_rule  goto 46
+	stmt_rule  goto 43
+	expr_rule  goto 44
+
+
+33: reduce/reduce conflict (reduce 29, reduce 32) on SQRBRACE
+33: reduce/reduce conflict (reduce 29, reduce 35) on SQRBRACE
+state 33
+	expr_rule : SQLBRACE . array_int_list_rule SQRBRACE  (52)
+	expr_rule : SQLBRACE . array_bool_list_rule SQRBRACE  (53)
+	expr_rule : SQLBRACE . array_string_list_rule SQRBRACE  (54)
+	array_int_list_rule : .  (29)
+	array_string_list_rule : .  (32)
+	array_bool_list_rule : .  (35)
+
+	LITERAL  shift 47
+	BLIT  shift 48
+	SLIT  shift 49
+	SQRBRACE  reduce 29
+
+	array_int_list_rule  goto 50
+	array_string_list_rule  goto 51
+	array_bool_list_rule  goto 52
+
+
+state 34
+	stmt_rule : IF . LPAREN expr_rule RPAREN stmt_rule ELSE stmt_rule  (22)
+
+	LPAREN  shift 53
+	.  error
+
+
+state 35
+	stmt_rule : WHILE . LPAREN expr_rule RPAREN stmt_rule  (23)
+
+	LPAREN  shift 54
+	.  error
+
+
+state 36
+	stmt_rule : RETURN . expr_opt_rule SEMI  (24)
+	expr_opt_rule : .  (27)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	SEMI  reduce 27
+
+	expr_rule  goto 55
+	expr_opt_rule  goto 56
+
+
+state 37
+	expr_rule : LITERAL .  (39)
+
+	.  reduce 39
+
+
+state 38
+	expr_rule : BLIT .  (38)
+
+	.  reduce 38
+
+
+state 39
+	expr_rule : SLIT .  (40)
+
+	.  reduce 40
+
+
+state 40
+	expr_rule : ID .  (41)
+	expr_rule : ID . ASSIGN expr_rule  (49)
+	expr_rule : ID . LPAREN args_opt_rule RPAREN  (51)
+	expr_rule : ID . SQLBRACE expr_rule SQRBRACE  (55)
+
+	LPAREN  shift 57
+	SQLBRACE  shift 58
+	ASSIGN  shift 59
+	SEMI  reduce 41
+	RPAREN  reduce 41
+	SQRBRACE  reduce 41
+	PLUS  reduce 41
+	MINUS  reduce 41
+	EQ  reduce 41
+	NEQ  reduce 41
+	LT  reduce 41
+	AND  reduce 41
+	OR  reduce 41
+	COMMA  reduce 41
+
+
+state 41
+	stmt_rule : typ_rule . ID SEMI  (25)
+	stmt_rule : typ_rule . ID ASSIGN expr_rule SEMI  (26)
+
+	ID  shift 60
+	.  error
+
+
+state 42
+	fdecl_rule : vdecl_rule LPAREN formals_opt_rule RPAREN LBRACE stmt_list_rule . RBRACE  (13)
+
+	RBRACE  shift 61
+	.  error
+
+
+state 43
+	stmt_list_rule : stmt_rule . stmt_list_rule  (19)
+	stmt_list_rule : .  (18)
+
+	LPAREN  shift 31
+	LBRACE  shift 32
+	SQLBRACE  shift 33
+	IF  shift 34
+	WHILE  shift 35
+	INT  shift 3
+	STRING  shift 4
+	BOOL  shift 5
+	VOID  shift 6
+	ARRAY  shift 7
+	RETURN  shift 36
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	RBRACE  reduce 18
+
+	typ_rule  goto 41
+	stmt_list_rule  goto 62
+	stmt_rule  goto 43
+	expr_rule  goto 44
+
+
+state 44
+	stmt_rule : expr_rule . SEMI  (20)
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+
+	SEMI  shift 63
+	PLUS  shift 64
+	MINUS  shift 65
+	EQ  shift 66
+	NEQ  shift 67
+	LT  shift 68
+	AND  shift 69
+	OR  shift 70
+	.  error
+
+
+state 45
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+	expr_rule : LPAREN expr_rule . RPAREN  (50)
+
+	RPAREN  shift 71
+	PLUS  shift 64
+	MINUS  shift 65
+	EQ  shift 66
+	NEQ  shift 67
+	LT  shift 68
+	AND  shift 69
+	OR  shift 70
+	.  error
+
+
+state 46
+	stmt_rule : LBRACE stmt_list_rule . RBRACE  (21)
+
+	RBRACE  shift 72
+	.  error
+
+
+state 47
+	array_int_list_rule : LITERAL .  (30)
+	array_int_list_rule : LITERAL . COMMA array_int_list_rule  (31)
+
+	COMMA  shift 73
+	SQRBRACE  reduce 30
+
+
+state 48
+	array_bool_list_rule : BLIT .  (36)
+	array_bool_list_rule : BLIT . COMMA array_bool_list_rule  (37)
+
+	COMMA  shift 74
+	SQRBRACE  reduce 36
+
+
+state 49
+	array_string_list_rule : SLIT .  (33)
+	array_string_list_rule : SLIT . COMMA array_string_list_rule  (34)
+
+	COMMA  shift 75
+	SQRBRACE  reduce 33
+
+
+state 50
+	expr_rule : SQLBRACE array_int_list_rule . SQRBRACE  (52)
+
+	SQRBRACE  shift 76
+	.  error
+
+
+state 51
+	expr_rule : SQLBRACE array_string_list_rule . SQRBRACE  (54)
+
+	SQRBRACE  shift 77
+	.  error
+
+
+state 52
+	expr_rule : SQLBRACE array_bool_list_rule . SQRBRACE  (53)
+
+	SQRBRACE  shift 78
+	.  error
+
+
+state 53
+	stmt_rule : IF LPAREN . expr_rule RPAREN stmt_rule ELSE stmt_rule  (22)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 79
+
+
+state 54
+	stmt_rule : WHILE LPAREN . expr_rule RPAREN stmt_rule  (23)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 80
+
+
+state 55
+	expr_opt_rule : expr_rule .  (28)
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+
+	PLUS  shift 64
+	MINUS  shift 65
+	EQ  shift 66
+	NEQ  shift 67
+	LT  shift 68
+	AND  shift 69
+	OR  shift 70
+	SEMI  reduce 28
+
+
+state 56
+	stmt_rule : RETURN expr_opt_rule . SEMI  (24)
+
+	SEMI  shift 81
+	.  error
+
+
+state 57
+	expr_rule : ID LPAREN . args_opt_rule RPAREN  (51)
+	args_opt_rule : .  (56)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	RPAREN  reduce 56
+
+	expr_rule  goto 82
+	args_opt_rule  goto 83
+	args_rule  goto 84
+
+
+state 58
+	expr_rule : ID SQLBRACE . expr_rule SQRBRACE  (55)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 85
+
+
+state 59
+	expr_rule : ID ASSIGN . expr_rule  (49)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 86
+
+
+state 60
+	stmt_rule : typ_rule ID . SEMI  (25)
+	stmt_rule : typ_rule ID . ASSIGN expr_rule SEMI  (26)
+
+	SEMI  shift 87
+	ASSIGN  shift 88
+	.  error
+
+
+state 61
+	fdecl_rule : vdecl_rule LPAREN formals_opt_rule RPAREN LBRACE stmt_list_rule RBRACE .  (13)
+
+	.  reduce 13
+
+
+state 62
+	stmt_list_rule : stmt_rule stmt_list_rule .  (19)
+
+	.  reduce 19
+
+
+state 63
+	stmt_rule : expr_rule SEMI .  (20)
+
+	.  reduce 20
+
+
+state 64
+	expr_rule : expr_rule PLUS . expr_rule  (42)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 89
+
+
+state 65
+	expr_rule : expr_rule MINUS . expr_rule  (43)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 90
+
+
+state 66
+	expr_rule : expr_rule EQ . expr_rule  (44)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 91
+
+
+state 67
+	expr_rule : expr_rule NEQ . expr_rule  (45)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 92
+
+
+state 68
+	expr_rule : expr_rule LT . expr_rule  (46)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 93
+
+
+state 69
+	expr_rule : expr_rule AND . expr_rule  (47)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 94
+
+
+state 70
+	expr_rule : expr_rule OR . expr_rule  (48)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 95
+
+
+state 71
+	expr_rule : LPAREN expr_rule RPAREN .  (50)
+
+	.  reduce 50
+
+
+state 72
+	stmt_rule : LBRACE stmt_list_rule RBRACE .  (21)
+
+	.  reduce 21
+
+
+state 73
+	array_int_list_rule : LITERAL COMMA . array_int_list_rule  (31)
+	array_int_list_rule : .  (29)
+
+	LITERAL  shift 47
+	SQRBRACE  reduce 29
+
+	array_int_list_rule  goto 96
+
+
+state 74
+	array_bool_list_rule : BLIT COMMA . array_bool_list_rule  (37)
+	array_bool_list_rule : .  (35)
+
+	BLIT  shift 48
+	SQRBRACE  reduce 35
+
+	array_bool_list_rule  goto 97
+
+
+state 75
+	array_string_list_rule : SLIT COMMA . array_string_list_rule  (34)
+	array_string_list_rule : .  (32)
+
+	SLIT  shift 49
+	SQRBRACE  reduce 32
+
+	array_string_list_rule  goto 98
+
+
+state 76
+	expr_rule : SQLBRACE array_int_list_rule SQRBRACE .  (52)
+
+	.  reduce 52
+
+
+state 77
+	expr_rule : SQLBRACE array_string_list_rule SQRBRACE .  (54)
+
+	.  reduce 54
+
+
+state 78
+	expr_rule : SQLBRACE array_bool_list_rule SQRBRACE .  (53)
+
+	.  reduce 53
+
+
+state 79
+	stmt_rule : IF LPAREN expr_rule . RPAREN stmt_rule ELSE stmt_rule  (22)
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+
+	RPAREN  shift 99
+	PLUS  shift 64
+	MINUS  shift 65
+	EQ  shift 66
+	NEQ  shift 67
+	LT  shift 68
+	AND  shift 69
+	OR  shift 70
+	.  error
+
+
+state 80
+	stmt_rule : WHILE LPAREN expr_rule . RPAREN stmt_rule  (23)
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+
+	RPAREN  shift 100
+	PLUS  shift 64
+	MINUS  shift 65
+	EQ  shift 66
+	NEQ  shift 67
+	LT  shift 68
+	AND  shift 69
+	OR  shift 70
+	.  error
+
+
+state 81
+	stmt_rule : RETURN expr_opt_rule SEMI .  (24)
+
+	.  reduce 24
+
+
+state 82
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+	args_rule : expr_rule .  (58)
+	args_rule : expr_rule . COMMA args_rule  (59)
+
+	PLUS  shift 64
+	MINUS  shift 65
+	EQ  shift 66
+	NEQ  shift 67
+	LT  shift 68
+	AND  shift 69
+	OR  shift 70
+	COMMA  shift 101
+	RPAREN  reduce 58
+
+
+state 83
+	expr_rule : ID LPAREN args_opt_rule . RPAREN  (51)
+
+	RPAREN  shift 102
+	.  error
+
+
+state 84
+	args_opt_rule : args_rule .  (57)
+
+	.  reduce 57
+
+
+state 85
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+	expr_rule : ID SQLBRACE expr_rule . SQRBRACE  (55)
+
+	SQRBRACE  shift 103
+	PLUS  shift 64
+	MINUS  shift 65
+	EQ  shift 66
+	NEQ  shift 67
+	LT  shift 68
+	AND  shift 69
+	OR  shift 70
+	.  error
+
+
+state 86
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+	expr_rule : ID ASSIGN expr_rule .  (49)
+
+	PLUS  shift 64
+	MINUS  shift 65
+	EQ  shift 66
+	NEQ  shift 67
+	LT  shift 68
+	AND  shift 69
+	OR  shift 70
+	SEMI  reduce 49
+	RPAREN  reduce 49
+	SQRBRACE  reduce 49
+	COMMA  reduce 49
+
+
+state 87
+	stmt_rule : typ_rule ID SEMI .  (25)
+
+	.  reduce 25
+
+
+state 88
+	stmt_rule : typ_rule ID ASSIGN . expr_rule SEMI  (26)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 104
+
+
+state 89
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule PLUS expr_rule .  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+
+	.  reduce 42
+
+
+state 90
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule MINUS expr_rule .  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+
+	.  reduce 43
+
+
+state 91
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule EQ expr_rule .  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+
+	PLUS  shift 64
+	MINUS  shift 65
+	LT  shift 68
+	SEMI  reduce 44
+	RPAREN  reduce 44
+	SQRBRACE  reduce 44
+	EQ  reduce 44
+	NEQ  reduce 44
+	AND  reduce 44
+	OR  reduce 44
+	COMMA  reduce 44
+
+
+state 92
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule NEQ expr_rule .  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+
+	PLUS  shift 64
+	MINUS  shift 65
+	LT  shift 68
+	SEMI  reduce 45
+	RPAREN  reduce 45
+	SQRBRACE  reduce 45
+	EQ  reduce 45
+	NEQ  reduce 45
+	AND  reduce 45
+	OR  reduce 45
+	COMMA  reduce 45
+
+
+state 93
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule LT expr_rule .  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+
+	PLUS  shift 64
+	MINUS  shift 65
+	SEMI  reduce 46
+	RPAREN  reduce 46
+	SQRBRACE  reduce 46
+	EQ  reduce 46
+	NEQ  reduce 46
+	LT  reduce 46
+	AND  reduce 46
+	OR  reduce 46
+	COMMA  reduce 46
+
+
+state 94
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule AND expr_rule .  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+
+	PLUS  shift 64
+	MINUS  shift 65
+	EQ  shift 66
+	NEQ  shift 67
+	LT  shift 68
+	SEMI  reduce 47
+	RPAREN  reduce 47
+	SQRBRACE  reduce 47
+	AND  reduce 47
+	OR  reduce 47
+	COMMA  reduce 47
+
+
+state 95
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+	expr_rule : expr_rule OR expr_rule .  (48)
+
+	PLUS  shift 64
+	MINUS  shift 65
+	EQ  shift 66
+	NEQ  shift 67
+	LT  shift 68
+	AND  shift 69
+	SEMI  reduce 48
+	RPAREN  reduce 48
+	SQRBRACE  reduce 48
+	OR  reduce 48
+	COMMA  reduce 48
+
+
+state 96
+	array_int_list_rule : LITERAL COMMA array_int_list_rule .  (31)
+
+	.  reduce 31
+
+
+state 97
+	array_bool_list_rule : BLIT COMMA array_bool_list_rule .  (37)
+
+	.  reduce 37
+
+
+state 98
+	array_string_list_rule : SLIT COMMA array_string_list_rule .  (34)
+
+	.  reduce 34
+
+
+state 99
+	stmt_rule : IF LPAREN expr_rule RPAREN . stmt_rule ELSE stmt_rule  (22)
+
+	LPAREN  shift 31
+	LBRACE  shift 32
+	SQLBRACE  shift 33
+	IF  shift 34
+	WHILE  shift 35
+	INT  shift 3
+	STRING  shift 4
+	BOOL  shift 5
+	VOID  shift 6
+	ARRAY  shift 7
+	RETURN  shift 36
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	typ_rule  goto 41
+	stmt_rule  goto 105
+	expr_rule  goto 44
+
+
+state 100
+	stmt_rule : WHILE LPAREN expr_rule RPAREN . stmt_rule  (23)
+
+	LPAREN  shift 31
+	LBRACE  shift 32
+	SQLBRACE  shift 33
+	IF  shift 34
+	WHILE  shift 35
+	INT  shift 3
+	STRING  shift 4
+	BOOL  shift 5
+	VOID  shift 6
+	ARRAY  shift 7
+	RETURN  shift 36
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	typ_rule  goto 41
+	stmt_rule  goto 106
+	expr_rule  goto 44
+
+
+state 101
+	args_rule : expr_rule COMMA . args_rule  (59)
+
+	LPAREN  shift 31
+	SQLBRACE  shift 33
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	expr_rule  goto 82
+	args_rule  goto 107
+
+
+state 102
+	expr_rule : ID LPAREN args_opt_rule RPAREN .  (51)
+
+	.  reduce 51
+
+
+state 103
+	expr_rule : ID SQLBRACE expr_rule SQRBRACE .  (55)
+
+	.  reduce 55
+
+
+state 104
+	stmt_rule : typ_rule ID ASSIGN expr_rule . SEMI  (26)
+	expr_rule : expr_rule . PLUS expr_rule  (42)
+	expr_rule : expr_rule . MINUS expr_rule  (43)
+	expr_rule : expr_rule . EQ expr_rule  (44)
+	expr_rule : expr_rule . NEQ expr_rule  (45)
+	expr_rule : expr_rule . LT expr_rule  (46)
+	expr_rule : expr_rule . AND expr_rule  (47)
+	expr_rule : expr_rule . OR expr_rule  (48)
+
+	SEMI  shift 108
+	PLUS  shift 64
+	MINUS  shift 65
+	EQ  shift 66
+	NEQ  shift 67
+	LT  shift 68
+	AND  shift 69
+	OR  shift 70
+	.  error
+
+
+state 105
+	stmt_rule : IF LPAREN expr_rule RPAREN stmt_rule . ELSE stmt_rule  (22)
+
+	ELSE  shift 109
+	.  error
+
+
+state 106
+	stmt_rule : WHILE LPAREN expr_rule RPAREN stmt_rule .  (23)
+
+	.  reduce 23
+
+
+state 107
+	args_rule : expr_rule COMMA args_rule .  (59)
+
+	.  reduce 59
+
+
+state 108
+	stmt_rule : typ_rule ID ASSIGN expr_rule SEMI .  (26)
+
+	.  reduce 26
+
+
+state 109
+	stmt_rule : IF LPAREN expr_rule RPAREN stmt_rule ELSE . stmt_rule  (22)
+
+	LPAREN  shift 31
+	LBRACE  shift 32
+	SQLBRACE  shift 33
+	IF  shift 34
+	WHILE  shift 35
+	INT  shift 3
+	STRING  shift 4
+	BOOL  shift 5
+	VOID  shift 6
+	ARRAY  shift 7
+	RETURN  shift 36
+	LITERAL  shift 37
+	BLIT  shift 38
+	SLIT  shift 39
+	ID  shift 40
+	.  error
+
+	typ_rule  goto 41
+	stmt_rule  goto 110
+	expr_rule  goto 44
+
+
+state 110
+	stmt_rule : IF LPAREN expr_rule RPAREN stmt_rule ELSE stmt_rule .  (22)
+
+	.  reduce 22
+
+
+Rules never reduced:
+	vdecl_list_rule :  (5)
+	vdecl_list_rule : vdecl_rule SEMI vdecl_list_rule  (6)
+
+
+State 33 contains 2 reduce/reduce conflicts.
+
+
+36 terminals, 19 nonterminals
+61 grammar rules, 111 states
