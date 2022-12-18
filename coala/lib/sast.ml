@@ -18,6 +18,7 @@ type sstmt =
     SBlock of sstmt list
   | SExpr of sexpr
   | SIf of sexpr * sstmt * sstmt
+  | SFor of sexpr * sexpr * sexpr * sstmt
   | SWhile of sexpr * sstmt
   (* return *)
   | SReturn of sexpr
@@ -60,6 +61,9 @@ let rec string_of_sstmt = function
   | SReturn(expr) -> "return " ^ string_of_sexpr expr ^ ";\n"
   | SIf(e, s1, s2) ->  "if (" ^ string_of_sexpr e ^ ")\n" ^
                        string_of_sstmt s1 ^ "else\n" ^ string_of_sstmt s2
+  | SFor(e1, e2, e3, s) ->
+    "for (" ^ string_of_sexpr e1  ^ " ; " ^ string_of_sexpr e2 ^ " ; " ^
+    string_of_sexpr e3  ^ ") " ^ string_of_sstmt s
   | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
   | SDeclare(ty, var) -> string_of_typ ty ^ " " ^ var ^ ";\n"
   | SDeclareAndAssign(ty, var, e) -> string_of_typ ty ^ " " ^ var ^ " = " ^ string_of_sexpr e ^ ";\n"
