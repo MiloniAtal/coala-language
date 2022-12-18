@@ -4,8 +4,8 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE QUOTES PLUS MINUS ASSIGN
-%token EQ NEQ LT AND OR
+%token SEMI LPAREN RPAREN LBRACE RBRACE QUOTES PLUS MINUS MODULO ASSIGN
+%token EQ NEQ LEQ GEQ LT GT AND OR
 %token IF ELSE WHILE INT STRING BOOL VOID
 %token RETURN COMMA
 %token <int> LITERAL
@@ -21,8 +21,10 @@ open Ast
 %left OR
 %left AND
 %left EQ NEQ
-%left LT
-%left PLUS MINUS
+%left LEQ GEQ
+%left LT GT
+/*Determing MODULO Precedence*/
+%left PLUS MINUS MODULO
 
 %%
 
@@ -94,9 +96,13 @@ expr_rule:
   | ID                            { Id $1                 }
   | expr_rule PLUS expr_rule      { Binop ($1, Add, $3)   }
   | expr_rule MINUS expr_rule     { Binop ($1, Sub, $3)   }
+  | expr_rule MODULO expr_rule     { Binop ($1, Modulo, $3)   }
   | expr_rule EQ expr_rule        { Binop ($1, Equal, $3) }
   | expr_rule NEQ expr_rule       { Binop ($1, Neq, $3)   }
+  | expr_rule LEQ expr_rule       { Binop ($1, Leq, $3)   }
+  | expr_rule GEQ expr_rule       { Binop ($1, Geq, $3)   }
   | expr_rule LT expr_rule        { Binop ($1, Less, $3)  }
+  | expr_rule GT expr_rule        { Binop ($1, Gre, $3)  }
   | expr_rule AND expr_rule       { Binop ($1, And, $3)   }
   | expr_rule OR expr_rule        { Binop ($1, Or, $3)    }
   | ID ASSIGN expr_rule           { Assign ($1, $3)       }

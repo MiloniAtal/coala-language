@@ -114,11 +114,15 @@ let translate (globals, functions) =
         (match op with
            A.Add     -> L.build_add
          | A.Sub     -> L.build_sub
+         | A.Modulo     -> L.build_srem
          | A.And     -> L.build_and
          | A.Or      -> L.build_or
          | A.Equal   -> L.build_icmp L.Icmp.Eq
          | A.Neq     -> L.build_icmp L.Icmp.Ne
+         | A.Leq     -> L.build_icmp L.Icmp.Sle
+         | A.Geq     -> L.build_icmp L.Icmp.Ule
          | A.Less    -> L.build_icmp L.Icmp.Slt
+         | A.Gre     -> L.build_icmp L.Icmp.Ult
         ) e1' e2' "tmp" builder
       | SCall ("print", [e]) ->
         L.build_call printf_func [| int_format_str ; (build_expr builder e) |]

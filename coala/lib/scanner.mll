@@ -17,10 +17,14 @@ rule token = parse
 | ','      { COMMA }
 | '+'      { PLUS }
 | '-'      { MINUS }
+| '%'      { MODULO }
 | '='      { ASSIGN }
+| ">="      { GEQ }
+| "<="      { LEQ }
 | "=="     { EQ }
 | "!="     { NEQ }
 | '<'      { LT }
+| '>'      { GT }
 | "&&"     { AND }
 | "||"     { OR }
 | "if"     { IF }
