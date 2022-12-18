@@ -167,8 +167,6 @@ let check (globals, functions) =
       | Expr e -> SExpr (check_expr e)
       | If(e, st1, st2) ->
         SIf(check_bool_expr e, check_stmt st1, check_stmt st2)
-      | For(e1, e2, e3, st) ->
-        SFor(check_expr e1, check_bool_expr e2,check_expr e3, check_stmt st)
       | While(e, st) ->
         SWhile(check_bool_expr e, check_stmt st)
       | Declare(ty, s) -> ignore (check_declare ty s); ignore (Hashtbl.add symbol_table s ty); SDeclare (ty, s)
