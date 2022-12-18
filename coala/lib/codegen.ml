@@ -120,9 +120,9 @@ let translate (globals, functions) =
          | A.Equal   -> L.build_icmp L.Icmp.Eq
          | A.Neq     -> L.build_icmp L.Icmp.Ne
          | A.Leq     -> L.build_icmp L.Icmp.Sle
-         | A.Geq     -> L.build_icmp L.Icmp.Ule
+         | A.Geq     -> L.build_icmp L.Icmp.Sge
          | A.Less    -> L.build_icmp L.Icmp.Slt
-         | A.Gre     -> L.build_icmp L.Icmp.Ult
+         | A.Gre     -> L.build_icmp L.Icmp.Sgt
         ) e1' e2' "tmp" builder
       | SCall ("print", [e]) ->
         L.build_call printf_func [| int_format_str ; (build_expr builder e) |]
