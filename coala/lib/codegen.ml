@@ -82,7 +82,7 @@ let translate (globals, functions) =
       
       (* Allocate space for any locally declared variables and add the
        * resulting registers to our map *)
-      and add_local (t, n) =
+      and add_local builder (t, n) =
         let local_var = L.build_alloca (ltype_of_typ t) n builder
         in Hashtbl.add local_vars n local_var
       in
@@ -120,9 +120,9 @@ let translate (globals, functions) =
          | A.Equal   -> L.build_icmp L.Icmp.Eq
          | A.Neq     -> L.build_icmp L.Icmp.Ne
          | A.Leq     -> L.build_icmp L.Icmp.Sle
-         | A.Geq     -> L.build_icmp L.Icmp.Ule
+         | A.Geq     -> L.build_icmp L.Icmp.Sge
          | A.Less    -> L.build_icmp L.Icmp.Slt
-         | A.Gre     -> L.build_icmp L.Icmp.Ult
+         | A.Gre     -> L.build_icmp L.Icmp.Sgt
         ) e1' e2' "tmp" builder
       | SCall ("print", [e]) ->
         L.build_call printf_func [| int_format_str ; (build_expr builder e) |]
@@ -154,8 +154,8 @@ let translate (globals, functions) =
     let rec build_stmt builder = function
         SBlock sl -> List.fold_left build_stmt builder sl
       | SExpr e -> ignore(build_expr builder e); builder
-      | SDeclare (typ, s) -> ignore(add_local (typ, s)); builder
-      | SDeclareAndAssign (typ, s, e) -> ignore(add_local (typ, s)); let e' = build_expr builder e in
+      | SDeclare (typ, s) -> ignore(add_local builder (typ, s)); builder
+      | SDeclareAndAssign (typ, s, e) -> ignore(add_local builder (typ, s)); let e' = build_expr builder e in
       ignore(L.build_store e' (lookup s) builder); builder
       | SReturn e -> ignore(match fdecl.srtyp with
                               (* Special "return nothing" instr *)
