@@ -1,8 +1,10 @@
 void main(){
-    array<bool, 2> T = [true, false];
-    array<int, 2> S = [1, 2];
+    array<int,2> R = [1, 2];
+    array<bool,2> R2 = [false, true];
+    /*array<string,2> R1 = ["1",   "2"];*/
     int a = 0;
-    printb(T[1]);
-    print(S[1]);
+    print(R[0]);
+    printb(R2[0]);
+    /*prints(R1[0]);*/
     return;
 }
