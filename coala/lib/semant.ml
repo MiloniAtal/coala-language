@@ -42,7 +42,7 @@ let check (globals, functions) =
       fname = name; 
       formals = [(ty, "x")]; body = [] } map
     in List.fold_left add_bind StringMap.empty [ ("print", Int);
-			                         ("prints", String);]
+			                         ("prints", String); ("printc", Char); ("printf", Float);]
   in
 
   (* Add function name to symbol table *)
@@ -101,8 +101,10 @@ let check (globals, functions) =
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec check_expr = function
         Literal l -> (Int, SLiteral l)
+      | Fliteral l -> (Float, SFliteral l)
       | BoolLit l -> (Bool, SBoolLit l)
       | StringLit l -> (String, SStringLit l)
+      | CharLit l -> (Char, SCharLit l)
       | Id var -> (type_of_identifier var, SId var)
       | Noexpr -> (Void, SNoexpr)
       | Assign(var, e) as ex ->
@@ -125,8 +127,9 @@ let check (globals, functions) =
           (* Determine expression type based on operator and operand types *)
           let t = match op with
               Add | Sub | Modulo | Mul | Div when t1 = Int -> Int
+            | Add | Sub | Mul | Div when t1 = Float -> Float
             | Equal | Neq -> Bool
-            | Less | Gre | Leq | Geq when t1 = Int -> Bool
+            | Less | Gre | Leq | Geq when (t1 = Int || t1 = Float) -> Bool
             | And | Or when t1 = Bool -> Bool
             | _ -> raise (Failure err)
           in
