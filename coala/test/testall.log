@@ -1,0 +1,237 @@
+/opt/homebrew/opt/llvm@14/bin/lli
+
+###### Testing test-1
+../bin/main.exe -l tests/test-1.mc > test-1-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-1.out tests/test-1.out
+diff: test-1.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-2
+../bin/main.exe -l tests/test-2.mc > test-2-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-2.out tests/test-2.out
+diff: test-2.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-add1
+../bin/main.exe -l tests/test-add1.mc > test-add1-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-add1.out tests/test-add1.out
+diff: test-add1.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-arith1
+../bin/main.exe -l tests/test-arith1.mc > test-arith1-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-arith1.out tests/test-arith1.out
+diff: test-arith1.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-arith3
+../bin/main.exe -l tests/test-arith3.mc > test-arith3-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-arith3.out tests/test-arith3.out
+diff: test-arith3.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-assigning-variable
+../bin/main.exe -l tests/test-assigning-variable.mc > test-assigning-variable-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-assigning-variable.out tests/test-assigning-variable.out
+diff: test-assigning-variable.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-call-func-params
+../bin/main.exe -l tests/test-call-func-params.mc > test-call-func-params-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-call-func-params.out tests/test-call-func-params.out
+diff: test-call-func-params.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-call-func
+../bin/main.exe -l tests/test-call-func.mc > test-call-func-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-call-func.out tests/test-call-func.out
+diff: test-call-func.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-hello-world
+../bin/main.exe -l tests/test-hello-world.mc > test-hello-world-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-hello-world.out tests/test-hello-world.out
+diff: test-hello-world.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-mult1
+../bin/main.exe -l tests/test-mult1.mc > test-mult1-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-mult1.out tests/test-mult1.out
+diff: test-mult1.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-print-expr
+../bin/main.exe -l tests/test-print-expr.mc > test-print-expr-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-print-expr.out tests/test-print-expr.out
+diff: test-print-expr.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-print-int
+../bin/main.exe -l tests/test-print-int.mc > test-print-int-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-print-int.out tests/test-print-int.out
+diff: test-print-int.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-print-string
+../bin/main.exe -l tests/test-print-string.mc > test-print-string-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-print-string.out tests/test-print-string.out
+diff: test-print-string.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing fail-1
+../bin/main.exe < tests/fail-1.mc 2> fail-1.err >> testall.log
+diff -b fail-1.err tests/fail-1.err > fail-1.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-1.err differs from tests/fail-1.err
+###### SUCCESS
+
+###### Testing fail-assign-declare
+../bin/main.exe < tests/fail-assign-declare.mc 2> fail-assign-declare.err >> testall.log
+diff -b fail-assign-declare.err tests/fail-assign-declare.err > fail-assign-declare.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-assign-declare.err differs from tests/fail-assign-declare.err
+###### SUCCESS
+
+###### Testing fail-assign
+../bin/main.exe < tests/fail-assign.mc 2> fail-assign.err >> testall.log
+diff -b fail-assign.err tests/fail-assign.err > fail-assign.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-assign.err differs from tests/fail-assign.err
+###### SUCCESS
+
+###### Testing fail-assign2
+../bin/main.exe < tests/fail-assign2.mc 2> fail-assign2.err >> testall.log
+diff -b fail-assign2.err tests/fail-assign2.err > fail-assign2.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-assign2.err differs from tests/fail-assign2.err
+###### SUCCESS
+
+###### Testing fail-dead1
+../bin/main.exe < tests/fail-dead1.mc 2> fail-dead1.err >> testall.log
+diff -b fail-dead1.err tests/fail-dead1.err > fail-dead1.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-dead1.err differs from tests/fail-dead1.err
+###### SUCCESS
+
+###### Testing fail-func1
+../bin/main.exe < tests/fail-func1.mc 2> fail-func1.err >> testall.log
+diff -b fail-func1.err tests/fail-func1.err > fail-func1.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-func1.err differs from tests/fail-func1.err
+###### SUCCESS
+
+###### Testing fail-func2
+../bin/main.exe < tests/fail-func2.mc 2> fail-func2.err >> testall.log
+diff -b fail-func2.err tests/fail-func2.err > fail-func2.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-func2.err differs from tests/fail-func2.err
+###### SUCCESS
+
+###### Testing fail-func3
+../bin/main.exe < tests/fail-func3.mc 2> fail-func3.err >> testall.log
+diff -b fail-func3.err tests/fail-func3.err > fail-func3.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-func3.err differs from tests/fail-func3.err
+###### SUCCESS
+
+###### Testing fail-func4
+../bin/main.exe < tests/fail-func4.mc 2> fail-func4.err >> testall.log
+diff -b fail-func4.err tests/fail-func4.err > fail-func4.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-func4.err differs from tests/fail-func4.err
+###### SUCCESS
+
+###### Testing fail-global1
+../bin/main.exe < tests/fail-global1.mc 2> fail-global1.err >> testall.log
+diff -b fail-global1.err tests/fail-global1.err > fail-global1.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-global1.err differs from tests/fail-global1.err
+###### SUCCESS
+
+###### Testing fail-no-main
+../bin/main.exe < tests/fail-no-main.mc 2> fail-no-main.err >> testall.log
+diff -b fail-no-main.err tests/fail-no-main.err > fail-no-main.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-no-main.err differs from tests/fail-no-main.err
+###### SUCCESS
+
+###### Testing fail-nomain
+../bin/main.exe < tests/fail-nomain.mc 2> fail-nomain.err >> testall.log
+diff -b fail-nomain.err tests/fail-nomain.err > fail-nomain.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-nomain.err differs from tests/fail-nomain.err
+###### SUCCESS
+
+###### Testing fail-noreturn
+../bin/main.exe < tests/fail-noreturn.mc 2> fail-noreturn.err >> testall.log
+diff -b fail-noreturn.err tests/fail-noreturn.err > fail-noreturn.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-noreturn.err differs from tests/fail-noreturn.err
+###### SUCCESS
+
+###### Testing fail-print
+../bin/main.exe < tests/fail-print.mc 2> fail-print.err >> testall.log
+diff -b fail-print.err tests/fail-print.err > fail-print.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-print.err differs from tests/fail-print.err
+###### SUCCESS
+
+###### Testing fail-print2
+../bin/main.exe < tests/fail-print2.mc 2> fail-print2.err >> testall.log
+diff -b fail-print2.err tests/fail-print2.err > fail-print2.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-print2.err differs from tests/fail-print2.err
+###### SUCCESS
+
+###### Testing fail-return-wrong
+../bin/main.exe < tests/fail-return-wrong.mc 2> fail-return-wrong.err >> testall.log
+diff -b fail-return-wrong.err tests/fail-return-wrong.err > fail-return-wrong.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-return-wrong.err differs from tests/fail-return-wrong.err
+###### SUCCESS
+
+###### Testing fail-undeclared
+../bin/main.exe < tests/fail-undeclared.mc 2> fail-undeclared.err >> testall.log
+diff -b fail-undeclared.err tests/fail-undeclared.err > fail-undeclared.diff
+./testall.sh: line 53: SignalError: command not found
+FAILED fail-undeclared.err differs from tests/fail-undeclared.err
+###### SUCCESS

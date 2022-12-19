@@ -1,10 +1,10 @@
-int division(int x, int y)
+int prec(int x, int y, int z)
 {
-  return x / y;
+  return x+y/z;
 }
 
 int main()
 {
-  print( division(-17, 3) );
+  print( prec(5, 20,10) );
   return 0;
 }
