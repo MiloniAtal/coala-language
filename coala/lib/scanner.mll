@@ -44,10 +44,9 @@ rule token = parse
 | "void"   { VOID }
 | "true"   { BLIT(true)  }
 | "false"  { BLIT(false) }
-| digit+ as lem  { LITERAL(int_of_string lem) }
-| '-'digit+ as lem  { LITERAL(int_of_string lem) }
+| ('-'digit+ | digit+)  as lem  { LITERAL(int_of_string lem) }
 | letter (digit | letter | '_')* as lem { ID(lem) }
-| digits '.'  digit* ( ['e' 'E'] ['+' '-']? digits )? as lxm { FLIT(lxm) }
+| ('-'digits | digits) '.'  digit* ( ['e' 'E'] ['+' '-']? digits )? as lxm { FLIT(lxm) }
 | quotes _* quotes as lem { SLIT(lem) }
 | squotes _* squotes as lem { CLIT(lem) }
 | eof { EOF }

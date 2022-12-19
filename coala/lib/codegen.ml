@@ -117,6 +117,23 @@ let translate (globals, functions) =
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = build_expr builder e in
         ignore(L.build_store e' (lookup s) builder); e'
+      | SBinop ((A.Float,_ ) as e1, op, e2) ->
+          let e1' = build_expr builder e1
+          and e2' = build_expr builder e2 in
+          (match op with 
+            A.Add     -> L.build_fadd
+          | A.Sub     -> L.build_fsub
+          | A.Mul    -> L.build_fmul
+          | A.Div     -> L.build_fdiv 
+          | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
+          | A.Neq     -> L.build_fcmp L.Fcmp.One
+          | A.Less    -> L.build_fcmp L.Fcmp.Olt
+          | A.Leq     -> L.build_fcmp L.Fcmp.Ole
+          | A.Gre -> L.build_fcmp L.Fcmp.Ogt
+          | A.Geq     -> L.build_fcmp L.Fcmp.Oge
+          | A.And | A.Or | A.Modulo ->
+              raise (Failure "internal error: semant should have rejected and/or on float")
+          ) e1' e2' "tmp" builder
       | SBinop (e1, op, e2) ->
         let e1' = build_expr builder e1
         and e2' = build_expr builder e2 in
@@ -125,7 +142,6 @@ let translate (globals, functions) =
          | A.Sub     -> L.build_sub
          | A.Mul     -> L.build_mul 
          | A.Div     -> L.build_sdiv 
-         (* mult div  *)
          | A.Modulo     -> L.build_srem
          | A.And     -> L.build_and
          | A.Or      -> L.build_or

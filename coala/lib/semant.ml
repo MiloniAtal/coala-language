@@ -127,8 +127,9 @@ let check (globals, functions) =
           (* Determine expression type based on operator and operand types *)
           let t = match op with
               Add | Sub | Modulo | Mul | Div when t1 = Int -> Int
+            | Add | Sub | Mul | Div when t1 = Float -> Float
             | Equal | Neq -> Bool
-            | Less | Gre | Leq | Geq when t1 = Int -> Bool
+            | Less | Gre | Leq | Geq when (t1 = Int || t1 = Float) -> Bool
             | And | Or when t1 = Bool -> Bool
             | _ -> raise (Failure err)
           in

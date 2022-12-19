@@ -92,7 +92,6 @@ expr_opt_rule:
   | expr_rule          { $1 }
 
 expr_rule:
-// support a pattern - followed by Literal 
   | BLIT                          { BoolLit $1            }
   | LITERAL                       { Literal $1            }
   | FLIT	                        { Fliteral($1)           }
