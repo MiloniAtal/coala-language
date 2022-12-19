@@ -3,6 +3,7 @@
 { open Coalaparse }
 
 let digit = ['0'-'9']
+let negatives = '-'['0'-'9']
 let letter = ['a'-'z' 'A'-'Z']
 let quotes = ['"']
 
@@ -17,6 +18,8 @@ rule token = parse
 | ','      { COMMA }
 | '+'      { PLUS }
 | '-'      { MINUS }
+| '*'      { MULT }
+| '/'      { DIV }
 | '%'      { MODULO }
 | '='      { ASSIGN }
 | ">="      { GEQ }
@@ -38,6 +41,7 @@ rule token = parse
 | "true"   { BLIT(true)  }
 | "false"  { BLIT(false) }
 | digit+ as lem  { LITERAL(int_of_string lem) }
+| '-'digit+ as lem  { LITERAL(int_of_string lem) }
 | letter (digit | letter | '_')* as lem { ID(lem) }
 | quotes _* quotes as lem { SLIT(lem) }
 | eof { EOF }
