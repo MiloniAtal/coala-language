@@ -4,7 +4,7 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE QUOTES PLUS MINUS MODULO ASSIGN
+%token SEMI LPAREN RPAREN LBRACE RBRACE QUOTES PLUS MINUS MODULO MULT DIV ASSIGN 
 %token EQ NEQ LEQ GEQ LT GT AND OR
 %token IF ELSE WHILE INT STRING BOOL VOID
 %token RETURN COMMA
@@ -23,8 +23,8 @@ open Ast
 %left EQ NEQ
 %left LEQ GEQ
 %left LT GT
-/*Determing MODULO Precedence*/
 %left PLUS MINUS MODULO
+%left MULT DIV
 
 %%
 
@@ -90,12 +90,15 @@ expr_opt_rule:
   | expr_rule          { $1 }
 
 expr_rule:
+// support a pattern - followed by Literal 
   | BLIT                          { BoolLit $1            }
   | LITERAL                       { Literal $1            }
   | SLIT                          { StringLit $1          }
   | ID                            { Id $1                 }
   | expr_rule PLUS expr_rule      { Binop ($1, Add, $3)   }
   | expr_rule MINUS expr_rule     { Binop ($1, Sub, $3)   }
+  | expr_rule MULT expr_rule      { Binop ($1, Mul, $3)   }
+  | expr_rule DIV expr_rule       { Binop ($1, Div, $3)   }
   | expr_rule MODULO expr_rule     { Binop ($1, Modulo, $3)   }
   | expr_rule EQ expr_rule        { Binop ($1, Equal, $3) }
   | expr_rule NEQ expr_rule       { Binop ($1, Neq, $3)   }

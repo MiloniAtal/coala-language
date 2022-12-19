@@ -114,6 +114,9 @@ let translate (globals, functions) =
         (match op with
            A.Add     -> L.build_add
          | A.Sub     -> L.build_sub
+         | A.Mul     -> L.build_mul 
+         | A.Div     -> L.build_sdiv 
+         (* mult div  *)
          | A.Modulo     -> L.build_srem
          | A.And     -> L.build_and
          | A.Or      -> L.build_or
