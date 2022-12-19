@@ -5,6 +5,7 @@
 let digit = ['0'-'9']
 let letter = ['a'-'z' 'A'-'Z']
 let quotes = ['"']
+let squotes = [''']
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
@@ -32,6 +33,7 @@ rule token = parse
 | "while"  { WHILE }
 | "return" { RETURN }
 | "int"    { INT }
+| "char"   { CHAR }
 | "string" { STRING }
 | "bool"   { BOOL }
 | "void"   { VOID }
@@ -40,6 +42,7 @@ rule token = parse
 | digit+ as lem  { LITERAL(int_of_string lem) }
 | letter (digit | letter | '_')* as lem { ID(lem) }
 | quotes _* quotes as lem { SLIT(lem) }
+| squotes _* squotes as lem { CLIT(lem) }
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 

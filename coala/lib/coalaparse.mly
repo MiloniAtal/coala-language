@@ -6,11 +6,12 @@ open Ast
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE QUOTES PLUS MINUS MODULO ASSIGN
 %token EQ NEQ LEQ GEQ LT GT AND OR
-%token IF ELSE WHILE INT STRING BOOL VOID
+%token IF ELSE WHILE INT STRING CHAR BOOL VOID
 %token RETURN COMMA
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> SLIT
+%token <string> CLIT
 %token <string> ID
 %token EOF
 
@@ -47,6 +48,7 @@ vdecl_rule:
 typ_rule:
   INT       { Int  }
   | STRING  { String  }
+  | CHAR    { Char }
   | BOOL    { Bool }
   | VOID    { Void}
 
@@ -93,6 +95,7 @@ expr_rule:
   | BLIT                          { BoolLit $1            }
   | LITERAL                       { Literal $1            }
   | SLIT                          { StringLit $1          }
+  | CLIT                          { CharLit $1            }
   | ID                            { Id $1                 }
   | expr_rule PLUS expr_rule      { Binop ($1, Add, $3)   }
   | expr_rule MINUS expr_rule     { Binop ($1, Sub, $3)   }

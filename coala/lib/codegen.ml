@@ -31,13 +31,15 @@ let translate (globals, functions) =
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context
   and void_t     = L.void_type   context 
-  and string_t   = L.pointer_type (L.i8_type context)  in
+  and string_t   = L.pointer_type (L.i8_type context) 
+  and char_t   = L.pointer_type (L.i8_type context)  in
 
   (* Return the LLVM type for a Coala type *)
   let ltype_of_typ = function
       A.Int   -> i32_t
     | A.Bool  -> i1_t
     | A.String -> string_t
+    | A.Char -> char_t
     | A.Void -> void_t
   in
 
@@ -102,6 +104,7 @@ let translate (globals, functions) =
     let rec build_expr builder ((_, e) : sexpr) = match e with
         SLiteral i  -> L.const_int i32_t i
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
+      | SCharLit s  -> L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder
     (* TODO: CHECK THIS *)
       | SStringLit s -> L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder
       | SNoexpr     -> L.const_int i32_t 0
@@ -130,6 +133,9 @@ let translate (globals, functions) =
       | SCall ("prints", [e]) ->
             L.build_call printf_func [|(build_expr builder e) |]
               "printf" builder
+      | SCall ("printc", [e]) ->
+                L.build_call printf_func [|(build_expr builder e) |]
+                  "printf" builder
       | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in
