@@ -1,8 +1,9 @@
-type bop = Add | Sub | Modulo | Equal | Neq | Leq | Geq | Less | Gre | And | Or
+type bop = Add | Sub | Mul | Div | Modulo | Equal | Neq | Leq | Geq | Less | Gre | And | Or
 
 type typ = Int | String | Char | Float | Bool | Void
 
 type expr =
+  (* | Int of int  *)
   | Literal of int
   | BoolLit of bool
   | StringLit of string
@@ -39,6 +40,8 @@ let string_of_op = function
     Add -> "+"
   | Sub -> "-"
   | Modulo -> "%"
+  | Mul -> "*"
+  | Div -> "/"
   | Equal -> "=="
   | Neq -> "!="
   | Leq -> "<="

@@ -126,7 +126,7 @@ let check (globals, functions) =
         if t1 = t2 then
           (* Determine expression type based on operator and operand types *)
           let t = match op with
-              Add | Sub | Modulo when t1 = Int -> Int
+              Add | Sub | Modulo | Mul | Div when t1 = Int -> Int
             | Equal | Neq -> Bool
             | Less | Gre | Leq | Geq when t1 = Int -> Bool
             | And | Or when t1 = Bool -> Bool
