@@ -42,7 +42,7 @@ let check (globals, functions) =
       fname = name; 
       formals = [(ty, "x")]; body = [] } map
     in List.fold_left add_bind StringMap.empty [ ("print", Int);
-			                         ("prints", String); ("printc", Char)]
+			                         ("prints", String); ("printc", Char); ("printf", Float);]
   in
 
   (* Add function name to symbol table *)
@@ -101,6 +101,7 @@ let check (globals, functions) =
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec check_expr = function
         Literal l -> (Int, SLiteral l)
+      | Fliteral l -> (Float, SFliteral l)
       | BoolLit l -> (Bool, SBoolLit l)
       | StringLit l -> (String, SStringLit l)
       | CharLit l -> (Char, SCharLit l)

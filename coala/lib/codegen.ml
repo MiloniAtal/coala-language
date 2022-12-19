@@ -30,6 +30,7 @@ let translate (globals, functions) =
   let i32_t      = L.i32_type    context
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context
+  and float_t    = L.double_type context
   and void_t     = L.void_type   context 
   and string_t   = L.pointer_type (L.i8_type context) 
   and char_t   = L.pointer_type (L.i8_type context)  in
@@ -40,13 +41,16 @@ let translate (globals, functions) =
     | A.Bool  -> i1_t
     | A.String -> string_t
     | A.Char -> char_t
+    | A.Float -> float_t
     | A.Void -> void_t
   in
 
   (* Create a map of global variables after creating each *)
   let global_vars : L.llvalue StringMap.t =
     let global_var m (t, n) =
-      let init = L.const_int (ltype_of_typ t) 0
+      let init =match t with
+      A.Float -> L.const_float (ltype_of_typ t) 0.0
+      | _ -> L.const_int (ltype_of_typ t) 0
       in StringMap.add n (L.define_global n init the_module) m in
     List.fold_left global_var StringMap.empty globals in
 
@@ -71,7 +75,8 @@ let translate (globals, functions) =
     let (the_function, _) = StringMap.find fdecl.sfname function_decls in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
-    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
+    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
+    and float_format_str = L.build_global_stringptr "%g\n" "fmt" builder in
 
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
@@ -104,6 +109,7 @@ let translate (globals, functions) =
     let rec build_expr builder ((_, e) : sexpr) = match e with
         SLiteral i  -> L.const_int i32_t i
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
+      | SFliteral l -> L.const_float_of_string float_t l 
       | SCharLit s  -> L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder
     (* TODO: CHECK THIS *)
       | SStringLit s -> L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder
@@ -135,6 +141,9 @@ let translate (globals, functions) =
               "printf" builder
       | SCall ("printc", [e]) ->
                 L.build_call printf_func [|(build_expr builder e) |]
+                  "printf" builder
+      | SCall ("printf", [e]) -> 
+                L.build_call printf_func [| float_format_str ; (build_expr builder e) |]
                   "printf" builder
       | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in
@@ -208,6 +217,7 @@ let translate (globals, functions) =
     (* add_terminal func_builder (L.build_ret (L.const_int i32_t 0)) *)
     add_terminal func_builder (match fdecl.srtyp with
         A.Void -> L.build_ret_void
+      | A.Float -> L.build_ret (L.const_float float_t 0.0)
       | t -> L.build_ret (L.const_int (ltype_of_typ t) 0))
 
   in

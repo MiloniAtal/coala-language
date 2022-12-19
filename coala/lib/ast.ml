@@ -1,12 +1,13 @@
 type bop = Add | Sub | Modulo | Equal | Neq | Leq | Geq | Less | Gre | And | Or
 
-type typ = Int | String | Char | Bool | Void
+type typ = Int | String | Char | Float | Bool | Void
 
 type expr =
   | Literal of int
   | BoolLit of bool
   | StringLit of string
   | CharLit of string
+  | Fliteral of string
   | Id of string
   | Binop of expr * bop * expr
   | Assign of string * expr
@@ -52,6 +53,7 @@ let rec string_of_expr = function
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | StringLit(l) -> l
+  | Fliteral(l) -> l
   | CharLit(l) -> l
   | Id(s) -> s
   | Binop(e1, o, e2) ->
@@ -63,6 +65,7 @@ let rec string_of_expr = function
 
 let string_of_typ = function
     Int -> "int"
+  | Float -> "float"
   | String -> "string"
   | Char -> "char"
   | Bool -> "bool"

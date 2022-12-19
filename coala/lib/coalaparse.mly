@@ -6,12 +6,11 @@ open Ast
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE QUOTES PLUS MINUS MODULO ASSIGN
 %token EQ NEQ LEQ GEQ LT GT AND OR
-%token IF ELSE WHILE INT STRING CHAR BOOL VOID
+%token IF ELSE WHILE INT STRING CHAR BOOL FLOAT VOID
 %token RETURN COMMA
 %token <int> LITERAL
 %token <bool> BLIT
-%token <string> SLIT
-%token <string> CLIT
+%token <string> SLIT FLIT CLIT
 %token <string> ID
 %token EOF
 
@@ -49,6 +48,7 @@ typ_rule:
   INT       { Int  }
   | STRING  { String  }
   | CHAR    { Char }
+  | FLOAT { Float }
   | BOOL    { Bool }
   | VOID    { Void}
 
@@ -94,6 +94,7 @@ expr_opt_rule:
 expr_rule:
   | BLIT                          { BoolLit $1            }
   | LITERAL                       { Literal $1            }
+  | FLIT	                        { Fliteral($1)           }
   | SLIT                          { StringLit $1          }
   | CLIT                          { CharLit $1            }
   | ID                            { Id $1                 }
