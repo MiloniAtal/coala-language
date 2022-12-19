@@ -24,6 +24,7 @@ open Ast
 %left EQ NEQ
 %left LT
 %left PLUS MINUS
+%left MULT DIV
 
 %%
 
