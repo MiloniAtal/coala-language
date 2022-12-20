@@ -1,0 +1,70 @@
+; ModuleID = 'Coala'
+source_filename = "Coala"
+
+@fmt = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+@fmt.1 = private unnamed_addr constant [4 x i8] c"%g\0A\00", align 1
+@"\22For Loop\22" = private unnamed_addr constant [10 x i8] c"For Loop\0A\00", align 1
+@"\22 \22" = private unnamed_addr constant [3 x i8] c" \0A\00", align 1
+@"\22While Loop\22" = private unnamed_addr constant [12 x i8] c"While Loop\0A\00", align 1
+@"\22 \22.2" = private unnamed_addr constant [3 x i8] c" \0A\00", align 1
+@"\22If-Else\22" = private unnamed_addr constant [9 x i8] c"If-Else\0A\00", align 1
+@"\22true\22" = private unnamed_addr constant [6 x i8] c"true\0A\00", align 1
+@"\22false\22" = private unnamed_addr constant [7 x i8] c"false\0A\00", align 1
+
+declare i32 @printf(i8*, ...)
+
+define void @main() {
+entry:
+  %i = alloca i32, align 4
+  %printf = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @"\22For Loop\22", i32 0, i32 0))
+  store i32 0, i32* %i, align 4
+  br label %while
+
+while:                                            ; preds = %while_body, %entry
+  %i1 = load i32, i32* %i, align 4
+  %tmp = icmp slt i32 %i1, 5
+  br i1 %tmp, label %while_body, label %while_end
+
+while_body:                                       ; preds = %while
+  %i2 = load i32, i32* %i, align 4
+  %printf3 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %i2)
+  %i4 = load i32, i32* %i, align 4
+  %tmp5 = add i32 %i4, 1
+  store i32 %tmp5, i32* %i, align 4
+  br label %while
+
+while_end:                                        ; preds = %while
+  store i32 5, i32* %i, align 4
+  %printf6 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\22 \22", i32 0, i32 0))
+  %printf7 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @"\22While Loop\22", i32 0, i32 0))
+  br label %while8
+
+while8:                                           ; preds = %while_body11, %while_end
+  %i9 = load i32, i32* %i, align 4
+  %tmp10 = icmp sgt i32 %i9, 0
+  br i1 %tmp10, label %while_body11, label %while_end16
+
+while_body11:                                     ; preds = %while8
+  %i12 = load i32, i32* %i, align 4
+  %printf13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %i12)
+  %i14 = load i32, i32* %i, align 4
+  %tmp15 = sub i32 %i14, 1
+  store i32 %tmp15, i32* %i, align 4
+  br label %while8
+
+while_end16:                                      ; preds = %while8
+  %printf17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\22 \22.2", i32 0, i32 0))
+  %printf18 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([9 x i8], [9 x i8]* @"\22If-Else\22", i32 0, i32 0))
+  br i1 true, label %then, label %else
+
+then:                                             ; preds = %while_end16
+  %printf19 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @"\22true\22", i32 0, i32 0))
+  br label %if_end
+
+else:                                             ; preds = %while_end16
+  %printf20 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\22false\22", i32 0, i32 0))
+  br label %if_end
+
+if_end:                                           ; preds = %else, %then
+  ret void
+}

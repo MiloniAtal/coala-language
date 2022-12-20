@@ -1,0 +1,26 @@
+; ModuleID = 'Coala'
+source_filename = "Coala"
+
+@fmt = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+@fmt.1 = private unnamed_addr constant [4 x i8] c"%g\0A\00", align 1
+@"\22Declare and Assign\22" = private unnamed_addr constant [20 x i8] c"Declare and Assign\0A\00", align 1
+@"\22 \22" = private unnamed_addr constant [3 x i8] c" \0A\00", align 1
+@"\22Declare and Assign Anywhere\22" = private unnamed_addr constant [29 x i8] c"Declare and Assign Anywhere\0A\00", align 1
+
+declare i32 @printf(i8*, ...)
+
+define void @main() {
+entry:
+  %x = alloca i32, align 4
+  store i32 1, i32* %x, align 4
+  %printf = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @"\22Declare and Assign\22", i32 0, i32 0))
+  %x1 = load i32, i32* %x, align 4
+  %printf2 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %x1)
+  %y = alloca i32, align 4
+  store i32 2, i32* %y, align 4
+  %printf3 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\22 \22", i32 0, i32 0))
+  %printf4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([29 x i8], [29 x i8]* @"\22Declare and Assign Anywhere\22", i32 0, i32 0))
+  %y5 = load i32, i32* %y, align 4
+  %printf6 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %y5)
+  ret void
+}
