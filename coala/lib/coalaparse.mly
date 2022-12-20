@@ -6,7 +6,7 @@ open Ast
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE SQLBRACE SQRBRACE QUOTES PLUS MINUS MODULO MULT DIV ASSIGN 
 %token EQ NEQ LEQ GEQ LT GT AND OR
-%token IF ELSE WHILE INT STRING CHAR BOOL FLOAT VOID ARRAY
+%token IF ELSE WHILE FOR INT STRING CHAR BOOL FLOAT VOID ARRAY
 %token RETURN COMMA
 %token <int> LITERAL
 %token <bool> BLIT
@@ -84,6 +84,7 @@ stmt_rule:
   expr_rule SEMI                                          { Expr $1         }
   | LBRACE stmt_list_rule RBRACE                          { Block $2        }
   | IF LPAREN expr_rule RPAREN stmt_rule ELSE stmt_rule   { If ($3, $5, $7) }
+  | FOR LPAREN expr_opt_rule SEMI expr_rule SEMI expr_opt_rule RPAREN stmt_rule { For($3, $5, $7, $9)   }
   | WHILE LPAREN expr_rule RPAREN stmt_rule               { While ($3,$5)   }
   | RETURN expr_opt_rule SEMI                             { Return $2       }
   | typ_rule ID SEMI                                      { Declare ($1, $2)      }
