@@ -55,8 +55,7 @@ rule token = parse
 | letter (digit | letter | '_')* as lem { ID(lem) }
 | ('-'digits | digits) '.'  digit* ( ['e' 'E'] ['+' '-']? digits )? as lxm { FLIT(lxm) }
 | quotes [^'"']* quotes as lem { SLIT(lem) }
-| squotes _* squotes as lem { CLIT(lem) }
-(* | "[" ( space arrayele space ",")* space arrayele space "]" as alem { ALIT( alem)} *)
+| squotes _ squotes as lem { CLIT(lem) }
 
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
