@@ -15,6 +15,7 @@ let space = [' ']*
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
 | "/*"     { comment lexbuf }           (* Comments *)
+| '^'      { CONCAT }
 | '('      { LPAREN }
 | ')'      { RPAREN }
 | '{'      { LBRACE }

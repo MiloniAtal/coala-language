@@ -104,6 +104,7 @@ let check (globals, functions) =
       | Fliteral l -> (Float, SFliteral l)
       | BoolLit l -> (Bool, SBoolLit l)
       | StringLit l -> (String, SStringLit l)
+      | Concat (l1, l2) -> (String, SConcat(l1, l2))
       | CharLit l -> (Char, SCharLit l)
       | ArrayStringLit l -> (Array(String,(List.length l) ), SArrayStringLit l )
       | ArrayIntLit l -> (Array(Int,(List.length l) ), SArrayIntLit l )

@@ -120,6 +120,7 @@ let translate (globals, functions) =
       | SCharLit s  -> L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder
     (* TODO: CHECK THIS *)
       | SStringLit s -> L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder
+      | SConcat(s1, s2) -> L.build_global_stringptr ((String.sub s1 1 ((String.length s1) - 2) ) ^ (String.sub s2 1 ((String.length s2) - 2) ^ "\n")) "tmp" builder
       | SArrayIntLit l -> L.const_array i32_t (Array.map (L.const_int i32_t) (Array.of_list l))
       | SArrayBoolLit l -> let bool_of_int b = L.const_int i1_t (if b then 1 else 0) in L.const_array i1_t (Array.map (bool_of_int) (Array.of_list l))
       | SArrayStringLit l -> let string_helper s = L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder in 
