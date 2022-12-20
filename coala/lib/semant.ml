@@ -104,6 +104,7 @@ let check (globals, functions) =
       | Fliteral l -> (Float, SFliteral l)
       | BoolLit l -> (Bool, SBoolLit l)
       | StringLit l -> (String, SStringLit l)
+      | Concat (l1, l2) -> (String, SConcat(l1, l2))
       | CharLit l -> (Char, SCharLit l)
       | ArrayStringLit l -> (Array(String,(List.length l) ), SArrayStringLit l )
       | ArrayIntLit l -> (Array(Int,(List.length l) ), SArrayIntLit l )
@@ -138,7 +139,6 @@ let check (globals, functions) =
             | Equal | Neq -> Bool
             | Less | Gre | Leq | Geq when (t1 = Int || t1 = Float) -> Bool
             | And | Or when t1 = Bool -> Bool
-            | Concat when t1 = String -> String
             | _ -> raise (Failure err)
           in
           (t, SBinop((t1, e1'), op, (t2, e2')))

@@ -1,4 +1,4 @@
-type bop = Add | Sub | Mul | Div | Modulo | Equal | Neq | Leq | Geq | Less | Gre | And | Or | Concat
+type bop = Add | Sub | Mul | Div | Modulo | Equal | Neq | Leq | Geq | Less | Gre | And | Or
 
 type typ = Int | String | Char | Float | Bool | Void | Array of typ * int
 
@@ -17,6 +17,7 @@ type expr =
   | ArrayStringLit of string list
   | ArrayBoolLit of bool list
   | ArrayIndexLit of string * expr
+  | Concat of string * string
   | Noexpr
 (* 
   let list_of_string = function
@@ -58,13 +59,13 @@ let string_of_op = function
   | Gre -> ">"
   | And -> "&&"
   | Or -> "||"
-  | Concat -> "^"
 
 let rec string_of_expr = function
     Literal(l) -> string_of_int l
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | StringLit(l) -> l
+  | Concat(l1, l2) -> l1 ^ " ^ " ^ l2
   | Fliteral(l) -> l
   | CharLit(l) -> l
   | Id(s) -> s

@@ -112,13 +112,6 @@ let translate (globals, functions) =
       with Not_found -> StringMap.find n global_vars
     in
 
-    (* Return the string literal corresponding to the given expression. *)
-    let expr_to_string_lit e =
-      let seperated_by_quotes = (String.split_on_char '"' (L.string_of_llvalue e)) in
-      let string_with_quotes = List.nth seperated_by_quotes 1 in
-      String.sub string_with_quotes 3 (String.length string_with_quotes - 6)
-    in
-
     (* Construct code for an expression; return its value *)
     let rec build_expr builder ((_, e) : sexpr) = match e with
         SLiteral i  -> L.const_int i32_t i
@@ -127,6 +120,7 @@ let translate (globals, functions) =
       | SCharLit s  -> L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder
     (* TODO: CHECK THIS *)
       | SStringLit s -> L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder
+      | SConcat(s1, s2) -> L.build_global_stringptr ((String.sub s1 1 ((String.length s1) - 2) ) ^ (String.sub s2 1 ((String.length s2) - 2) ^ "\n")) "tmp" builder
       | SArrayIntLit l -> L.const_array i32_t (Array.map (L.const_int i32_t) (Array.of_list l))
       | SArrayBoolLit l -> let bool_of_int b = L.const_int i1_t (if b then 1 else 0) in L.const_array i1_t (Array.map (bool_of_int) (Array.of_list l))
       | SArrayStringLit l -> let string_helper s = L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder in 
@@ -142,13 +136,6 @@ let translate (globals, functions) =
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = build_expr builder e in
         ignore(L.build_store e' (lookup s) builder); e'
-      | SBinop ((A.String,_ ) as e1, op, e2) ->
-        let e1' = build_expr builder e1
-        and e2' = build_expr builder e2 in
-        (match op with
-            A.Concat -> L.build_global_stringptr
-          | _ -> raise (Failure "invalid operation on strings; only concat allowed")
-        ) ((expr_to_string_lit e1') ^ (expr_to_string_lit e2') ^ "\n") "tmp" builder
       | SBinop ((A.Float,_ ) as e1, op, e2) ->
           let e1' = build_expr builder e1
           and e2' = build_expr builder e2 in
@@ -163,8 +150,8 @@ let translate (globals, functions) =
           | A.Leq     -> L.build_fcmp L.Fcmp.Ole
           | A.Gre -> L.build_fcmp L.Fcmp.Ogt
           | A.Geq     -> L.build_fcmp L.Fcmp.Oge
-          | A.And | A.Or | A.Modulo | A.Concat->
-              raise (Failure "internal error: semant should have rejected and/or/concat on float")
+          | A.And | A.Or | A.Modulo ->
+              raise (Failure "internal error: semant should have rejected and/or on float")
           ) e1' e2' "tmp" builder
       | SBinop (e1, op, e2) ->
         let e1' = build_expr builder e1
@@ -183,7 +170,6 @@ let translate (globals, functions) =
          | A.Geq     -> L.build_icmp L.Icmp.Sge
          | A.Less    -> L.build_icmp L.Icmp.Slt
          | A.Gre     -> L.build_icmp L.Icmp.Sgt
-         | A.Concat  -> raise (Failure "invalid concatenation")
         ) e1' e2' "tmp" builder
       | SCall ("print", [e]) ->
         L.build_call printf_func [| int_format_str ; (build_expr builder e) |]
