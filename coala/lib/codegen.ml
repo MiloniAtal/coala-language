@@ -112,6 +112,13 @@ let translate (globals, functions) =
       with Not_found -> StringMap.find n global_vars
     in
 
+    (* Return the string literal corresponding to the given expression. *)
+    let expr_to_string_lit e =
+      let seperated_by_quotes = (String.split_on_char '"' (L.string_of_llvalue e)) in
+      let string_with_quotes = List.nth seperated_by_quotes 1 in
+      String.sub string_with_quotes 3 (String.length string_with_quotes - 6)
+    in
+
     (* Construct code for an expression; return its value *)
     let rec build_expr builder ((_, e) : sexpr) = match e with
         SLiteral i  -> L.const_int i32_t i
@@ -135,6 +142,13 @@ let translate (globals, functions) =
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = build_expr builder e in
         ignore(L.build_store e' (lookup s) builder); e'
+      | SBinop ((A.String,_ ) as e1, op, e2) ->
+        let e1' = build_expr builder e1
+        and e2' = build_expr builder e2 in
+        (match op with
+            A.Concat -> L.build_global_stringptr
+          | _ -> raise (Failure "invalid operation on strings; only concat allowed")
+        ) ((expr_to_string_lit e1') ^ (expr_to_string_lit e2') ^ "\n") "tmp" builder
       | SBinop ((A.Float,_ ) as e1, op, e2) ->
           let e1' = build_expr builder e1
           and e2' = build_expr builder e2 in
@@ -149,8 +163,8 @@ let translate (globals, functions) =
           | A.Leq     -> L.build_fcmp L.Fcmp.Ole
           | A.Gre -> L.build_fcmp L.Fcmp.Ogt
           | A.Geq     -> L.build_fcmp L.Fcmp.Oge
-          | A.And | A.Or | A.Modulo ->
-              raise (Failure "internal error: semant should have rejected and/or on float")
+          | A.And | A.Or | A.Modulo | A.Concat->
+              raise (Failure "internal error: semant should have rejected and/or/concat on float")
           ) e1' e2' "tmp" builder
       | SBinop (e1, op, e2) ->
         let e1' = build_expr builder e1
@@ -169,6 +183,7 @@ let translate (globals, functions) =
          | A.Geq     -> L.build_icmp L.Icmp.Sge
          | A.Less    -> L.build_icmp L.Icmp.Slt
          | A.Gre     -> L.build_icmp L.Icmp.Sgt
+         | A.Concat  -> raise (Failure "invalid concatenation")
         ) e1' e2' "tmp" builder
       | SCall ("print", [e]) ->
         L.build_call printf_func [| int_format_str ; (build_expr builder e) |]

@@ -10,6 +10,8 @@ void main(){
     int a = 0;
     print(R[0]);
     printb(R2[0]);
+    string con = "hello" ^ " world";
+    prints(con);
     /*prints(R1[0]);*/
     return;
 }

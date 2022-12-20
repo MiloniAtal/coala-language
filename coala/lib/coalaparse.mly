@@ -5,7 +5,7 @@ open Ast
 %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE SQLBRACE SQRBRACE QUOTES PLUS MINUS MODULO MULT DIV ASSIGN 
-%token EQ NEQ LEQ GEQ LT GT AND OR
+%token EQ NEQ LEQ GEQ LT GT AND OR CONCAT
 %token IF ELSE WHILE FOR INT STRING CHAR BOOL FLOAT VOID ARRAY
 %token RETURN COMMA
 %token <int> LITERAL
@@ -18,6 +18,7 @@ open Ast
 %type <Ast.program> program_rule
 
 %right ASSIGN
+%left CONCAT
 %left OR
 %left AND
 %left EQ NEQ
@@ -130,6 +131,7 @@ expr_rule:
   | expr_rule GT expr_rule        { Binop ($1, Gre, $3)  }
   | expr_rule AND expr_rule       { Binop ($1, And, $3)   }
   | expr_rule OR expr_rule        { Binop ($1, Or, $3)    }
+  | expr_rule CONCAT expr_rule        { Binop ($1, Concat, $3)    }
   | ID ASSIGN expr_rule           { Assign ($1, $3)       }
   | LPAREN expr_rule RPAREN       { $2                    }
   | ID LPAREN args_opt_rule RPAREN     { Call ($1, $3)         }

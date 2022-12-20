@@ -138,6 +138,7 @@ let check (globals, functions) =
             | Equal | Neq -> Bool
             | Less | Gre | Leq | Geq when (t1 = Int || t1 = Float) -> Bool
             | And | Or when t1 = Bool -> Bool
+            | Concat when t1 = String -> String
             | _ -> raise (Failure err)
           in
           (t, SBinop((t1, e1'), op, (t2, e2')))

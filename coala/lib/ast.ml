@@ -1,4 +1,4 @@
-type bop = Add | Sub | Mul | Div | Modulo | Equal | Neq | Leq | Geq | Less | Gre | And | Or
+type bop = Add | Sub | Mul | Div | Modulo | Equal | Neq | Leq | Geq | Less | Gre | And | Or | Concat
 
 type typ = Int | String | Char | Float | Bool | Void | Array of typ * int
 
@@ -58,6 +58,7 @@ let string_of_op = function
   | Gre -> ">"
   | And -> "&&"
   | Or -> "||"
+  | Concat -> "^"
 
 let rec string_of_expr = function
     Literal(l) -> string_of_int l
