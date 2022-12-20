@@ -1,6 +1,6 @@
 type bop = Add | Sub | Mul | Div | Modulo | Equal | Neq | Leq | Geq | Less | Gre | And | Or
 
-type typ = Int | String | Char | Float | Bool | Void
+type typ = Int | String | Char | Float | Bool | Void | Array of typ * int
 
 type expr =
   (* | Int of int  *)
@@ -13,8 +13,15 @@ type expr =
   | Binop of expr * bop * expr
   | Assign of string * expr
   | Call of string * expr list
+  | ArrayIntLit of int list
+  | ArrayStringLit of string list
+  | ArrayBoolLit of bool list
+  | ArrayIndexLit of string * expr
   | Noexpr
-
+(* 
+  let list_of_string = function
+  (* | "[" ^ andar ^ "]" -> split (space "," space) andar  *)
+   _ ->  raise (Failure("Not a valid array lit ")) *)
 type stmt =
   | Block of stmt list
   | Expr of expr
@@ -64,16 +71,24 @@ let rec string_of_expr = function
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Call(f, el) ->
     f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+  | ArrayIntLit(el) -> "[" ^ (String.concat ", " (List.map string_of_int el)) ^ "]"
+  | ArrayStringLit(el) -> "[" ^ ((String.concat ", " (el))) ^ "]"
+  | ArrayBoolLit(el) -> "[" ^ (String.concat ", " (List.map string_of_bool el))^ "]"
+  | ArrayIndexLit(s, e) -> s ^ "[" ^ string_of_expr e ^ "]"
   | Noexpr -> ""
 
-let string_of_typ = function
+let rec string_of_typ = function
     Int -> "int"
   | Float -> "float"
   | String -> "string"
   | Char -> "char"
   | Bool -> "bool"
   | Void -> "void"
+  | Array(typ, size) -> "array" ^ "<" ^ (string_of_typ typ) ^ "," ^ string_of_int size ^ ">" 
 
+let typ_of_array = function
+    Array(typ, _) -> typ
+  | _ -> raise(Failure "not an array")
 let rec string_of_stmt = function
     Block(stmts) ->
     "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"

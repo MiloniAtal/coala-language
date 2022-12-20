@@ -42,7 +42,7 @@ let check (globals, functions) =
       fname = name; 
       formals = [(ty, "x")]; body = [] } map
     in List.fold_left add_bind StringMap.empty [ ("print", Int);
-			                         ("prints", String); ("printc", Char); ("printf", Float);]
+			                         ("prints", String); ("printb", Bool); ("printc", Char); ("printf", Float);]
   in
 
   (* Add function name to symbol table *)
@@ -105,6 +105,13 @@ let check (globals, functions) =
       | BoolLit l -> (Bool, SBoolLit l)
       | StringLit l -> (String, SStringLit l)
       | CharLit l -> (Char, SCharLit l)
+      | ArrayStringLit l -> (Array(String,(List.length l) ), SArrayStringLit l )
+      | ArrayIntLit l -> (Array(Int,(List.length l) ), SArrayIntLit l )
+      | ArrayBoolLit l -> (Array(Bool,(List.length l) ), SArrayBoolLit l )
+      | ArrayIndexLit (var, e) -> let (ty, e') = check_expr e in 
+          (match ty with
+          | Int ->  (typ_of_array (type_of_identifier var), SArrayIndexLit (var, (ty, e')))
+          | _ -> raise (Failure "invalid index type; not an int"))
       | Id var -> (type_of_identifier var, SId var)
       | Noexpr -> (Void, SNoexpr)
       | Assign(var, e) as ex ->
@@ -176,7 +183,7 @@ let check (globals, functions) =
       | DeclareAndAssign(ty, s, e) ->
           ignore (check_declare ty s);
           ignore (Hashtbl.add symbol_table s ty);
-          let (t, e') = check_expr e in if (t != ty) then raise(Failure("type mismatch"));
+          let (t, e') = check_expr e in if (t <> ty) then raise(Failure("type mismatch " ^ string_of_typ t ^ ";" ^ string_of_typ ty ));
           (* TODO: Better error message*)
           SDeclareAndAssign(ty, s, (t,e'))
       | Return e ->

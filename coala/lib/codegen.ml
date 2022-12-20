@@ -15,7 +15,6 @@
 module L = Llvm
 module A = Ast
 open Sast
-
 module StringMap = Map.Make(String)
 
 (* translate : Sast.program -> Llvm.module *)
@@ -32,8 +31,12 @@ let translate (globals, functions) =
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
   and void_t     = L.void_type   context 
-  and string_t   = L.pointer_type (L.i8_type context) 
-  and char_t   = L.pointer_type (L.i8_type context)  in
+  and char_t   = L.pointer_type (L.i8_type context)
+  and string_t   = L.pointer_type (L.i8_type context) in
+
+  let array_of_int_t = L.array_type i32_t
+  and array_of_bool_t = L.array_type i1_t
+  and array_of_string_t = L.array_type string_t in
 
   (* Return the LLVM type for a Coala type *)
   let ltype_of_typ = function
@@ -42,6 +45,10 @@ let translate (globals, functions) =
     | A.String -> string_t
     | A.Char -> char_t
     | A.Float -> float_t
+    | A.Array(A.Int, size) -> array_of_int_t size
+    | A.Array(A.Bool, size) -> array_of_bool_t size
+    | A.Array(A.String, size) -> array_of_string_t size
+    | A.Array(_, _) -> raise (Failure ("illegal array"))
     | A.Void -> void_t
   in
 
@@ -110,9 +117,20 @@ let translate (globals, functions) =
         SLiteral i  -> L.const_int i32_t i
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
       | SFliteral l -> L.const_float_of_string float_t l 
-      | SCharLit s  -> L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder
+      | SCharLit s  -> L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder
     (* TODO: CHECK THIS *)
-      | SStringLit s -> L.build_global_stringptr (String.cat (String.sub s 1 ((String.length s) - 2) )"\n") s builder
+      | SStringLit s -> L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder
+      | SArrayIntLit l -> L.const_array i32_t (Array.map (L.const_int i32_t) (Array.of_list l))
+      | SArrayBoolLit l -> let bool_of_int b = L.const_int i1_t (if b then 1 else 0) in L.const_array i1_t (Array.map (bool_of_int) (Array.of_list l))
+      | SArrayStringLit l -> let string_helper s = L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder in 
+                          L.const_array i32_t (Array.map (string_helper) (Array.of_list l))
+      | SArrayIndexLit (var, e) -> let (typ, _) = e in
+        (match typ with
+        | A.Int -> (*let llv = (L.build_load (lookup var) var builder) in *)
+          let index = (build_expr builder e) in
+          let gep = (L.build_in_bounds_gep (lookup var) [| L.const_int i32_t 0; index |] "index" builder) in L.build_load gep "array_access" builder 
+        | _ -> raise( Failure "Index should be an integer")
+        )
       | SNoexpr     -> L.const_int i32_t 0
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = build_expr builder e in
@@ -164,6 +182,9 @@ let translate (globals, functions) =
       | SCall ("printf", [e]) -> 
                 L.build_call printf_func [| float_format_str ; (build_expr builder e) |]
                   "printf" builder
+      | SCall ("printb", [e]) ->
+        L.build_call printf_func [| int_format_str ; (build_expr builder e) |]
+          "printf" builder
       | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in
         let llargs = List.rev (List.map (build_expr builder) (List.rev args)) in

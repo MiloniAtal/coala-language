@@ -8,6 +8,9 @@ let digits = digit+
 let letter = ['a'-'z' 'A'-'Z']
 let quotes = ['"']
 let squotes = [''']
+let arrayele = (digit+ | (quotes _* quotes))
+let space = [' ']*
+
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
@@ -16,6 +19,8 @@ rule token = parse
 | ')'      { RPAREN }
 | '{'      { LBRACE }
 | '}'      { RBRACE }
+| '['      { SQLBRACE }
+| ']'      { SQRBRACE }
 | ';'      { SEMI }
 | ','      { COMMA }
 | '+'      { PLUS }
@@ -45,10 +50,13 @@ rule token = parse
 | "true"   { BLIT(true)  }
 | "false"  { BLIT(false) }
 | ('-'digit+ | digit+)  as lem  { LITERAL(int_of_string lem) }
+| "array"   { ARRAY }
 | letter (digit | letter | '_')* as lem { ID(lem) }
 | ('-'digits | digits) '.'  digit* ( ['e' 'E'] ['+' '-']? digits )? as lxm { FLIT(lxm) }
-| quotes _* quotes as lem { SLIT(lem) }
+| quotes [^'"']* quotes as lem { SLIT(lem) }
 | squotes _* squotes as lem { CLIT(lem) }
+(* | "[" ( space arrayele space ",")* space arrayele space "]" as alem { ALIT( alem)} *)
+
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 
