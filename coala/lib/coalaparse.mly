@@ -100,16 +100,6 @@ array_int_list_rule:
   | LITERAL            { [$1] }
   | LITERAL COMMA array_int_list_rule  { $1::$3 }
 
-array_string_list_rule:
-  /* nothing */               { []     }
-  | SLIT            { [$1] }
-  | SLIT COMMA array_string_list_rule  { $1::$3 }
-
-array_bool_list_rule:
-  /* nothing */               { []     }
-  | BLIT            { [$1] }
-  | BLIT COMMA array_bool_list_rule  { $1::$3 }
-
 expr_rule:
   | BLIT                          { BoolLit $1            }
   | LITERAL                       { Literal $1            }
@@ -135,8 +125,6 @@ expr_rule:
   | LPAREN expr_rule RPAREN       { $2                    }
   | ID LPAREN args_opt_rule RPAREN     { Call ($1, $3)         }
   | SQLBRACE array_int_list_rule SQRBRACE { ArrayIntLit $2 }
-  | SQLBRACE array_bool_list_rule SQRBRACE { ArrayBoolLit $2 }
-  | SQLBRACE array_string_list_rule SQRBRACE { ArrayStringLit $2 }
   | ID SQLBRACE expr_rule SQRBRACE {ArrayIndexLit ($1, $3)}
 
 /* args_opt_rule*/

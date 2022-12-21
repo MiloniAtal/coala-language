@@ -8,7 +8,6 @@ let digits = digit+
 let letter = ['a'-'z' 'A'-'Z']
 let quotes = ['"']
 let squotes = [''']
-let arrayele = (digit+ | (quotes _* quotes))
 let space = [' ']*
 
 

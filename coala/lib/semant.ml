@@ -106,9 +106,7 @@ let check (globals, functions) =
       | StringLit l -> (String, SStringLit l)
       | Concat (l1, l2) -> (String, SConcat(l1, l2))
       | CharLit l -> (Char, SCharLit l)
-      | ArrayStringLit l -> (Array(String,(List.length l) ), SArrayStringLit l )
       | ArrayIntLit l -> (Array(Int,(List.length l) ), SArrayIntLit l )
-      | ArrayBoolLit l -> (Array(Bool,(List.length l) ), SArrayBoolLit l )
       | ArrayIndexLit (var, e) -> let (ty, e') = check_expr e in 
           (match ty with
           | Int ->  (typ_of_array (type_of_identifier var), SArrayIndexLit (var, (ty, e')))
