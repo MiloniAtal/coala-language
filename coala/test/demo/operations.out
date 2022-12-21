@@ -1,0 +1,47 @@
+; ModuleID = 'Coala'
+source_filename = "Coala"
+
+@fmt = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+@fmt.1 = private unnamed_addr constant [4 x i8] c"%g\0A\00", align 1
+@"\221. String concatenation\22" = private unnamed_addr constant [25 x i8] c"1. String concatenation\0A\00", align 1
+@tmp = private unnamed_addr constant [30 x i8] c"Best language is... coala !!\0A\00", align 1
+@tmp.2 = private unnamed_addr constant [34 x i8] c"I can concatenate here too; yayy\0A\00", align 1
+@"\22 \22" = private unnamed_addr constant [3 x i8] c" \0A\00", align 1
+@"\22---------------------------------------\22" = private unnamed_addr constant [41 x i8] c"---------------------------------------\0A\00", align 1
+@"\22 \22.3" = private unnamed_addr constant [3 x i8] c" \0A\00", align 1
+@"\222. Modulo\22" = private unnamed_addr constant [11 x i8] c"2. Modulo\0A\00", align 1
+@"\22a is:\22" = private unnamed_addr constant [7 x i8] c"a is:\0A\00", align 1
+@"\22b is:\22" = private unnamed_addr constant [7 x i8] c"b is:\0A\00", align 1
+@"\22a modulo b is:\22" = private unnamed_addr constant [16 x i8] c"a modulo b is:\0A\00", align 1
+
+declare i32 @printf(i8*, ...)
+
+define void @main() {
+entry:
+  %printf = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([25 x i8], [25 x i8]* @"\221. String concatenation\22", i32 0, i32 0))
+  %s = alloca i8*
+  store i8* getelementptr inbounds ([30 x i8], [30 x i8]* @tmp, i32 0, i32 0), i8** %s
+  %s1 = load i8*, i8** %s
+  %printf2 = call i32 (i8*, ...) @printf(i8* %s1)
+  %printf3 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([34 x i8], [34 x i8]* @tmp.2, i32 0, i32 0))
+  %printf4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\22 \22", i32 0, i32 0))
+  %printf5 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"\22---------------------------------------\22", i32 0, i32 0))
+  %printf6 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\22 \22.3", i32 0, i32 0))
+  %printf7 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([11 x i8], [11 x i8]* @"\222. Modulo\22", i32 0, i32 0))
+  %a = alloca i32
+  store i32 28, i32* %a
+  %b = alloca i32
+  store i32 6, i32* %b
+  %printf8 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\22a is:\22", i32 0, i32 0))
+  %a9 = load i32, i32* %a
+  %printf10 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %a9)
+  %printf11 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\22b is:\22", i32 0, i32 0))
+  %b12 = load i32, i32* %b
+  %printf13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %b12)
+  %printf14 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([16 x i8], [16 x i8]* @"\22a modulo b is:\22", i32 0, i32 0))
+  %a15 = load i32, i32* %a
+  %b16 = load i32, i32* %b
+  %tmp = srem i32 %a15, %b16
+  %printf17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %tmp)
+  ret void
+}
