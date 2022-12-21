@@ -18,6 +18,15 @@ diff: test-2.out: No such file or directory
 ./testall.sh: line 63: SignalError: command not found
 ###### FAILED
 
+###### Testing test-add-neg
+../bin/main.exe -l tests/test-add-neg.mc > test-add-neg-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-add-neg.out tests/test-add-neg.out
+diff: test-add-neg.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
 ###### Testing test-add1
 ../bin/main.exe -l tests/test-add1.mc > test-add1-temp.out
 ./testall.sh: line 62: ../bin/main.exe: No such file or directory
@@ -42,6 +51,24 @@ diff: test-arith1.out: No such file or directory
 ./testall.sh: line 63: SignalError: command not found
 diff -s test-arith3.out tests/test-arith3.out
 diff: test-arith3.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-arr1
+../bin/main.exe -l tests/test-arr1.mc > test-arr1-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-arr1.out tests/test-arr1.out
+diff: test-arr1.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-arr2
+../bin/main.exe -l tests/test-arr2.mc > test-arr2-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-arr2.out tests/test-arr2.out
+diff: test-arr2.out: No such file or directory
 ./testall.sh: line 63: SignalError: command not found
 ###### FAILED
 
@@ -72,6 +99,78 @@ diff: test-call-func.out: No such file or directory
 ./testall.sh: line 63: SignalError: command not found
 ###### FAILED
 
+###### Testing test-char
+../bin/main.exe -l tests/test-char.mc > test-char-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-char.out tests/test-char.out
+diff: test-char.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-concat-string
+../bin/main.exe -l tests/test-concat-string.mc > test-concat-string-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-concat-string.out tests/test-concat-string.out
+diff: test-concat-string.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-dec-assign
+../bin/main.exe -l tests/test-dec-assign.mc > test-dec-assign-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-dec-assign.out tests/test-dec-assign.out
+diff: test-dec-assign.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-div-neg
+../bin/main.exe -l tests/test-div-neg.mc > test-div-neg-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-div-neg.out tests/test-div-neg.out
+diff: test-div-neg.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-div1
+../bin/main.exe -l tests/test-div1.mc > test-div1-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-div1.out tests/test-div1.out
+diff: test-div1.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-float-neg
+../bin/main.exe -l tests/test-float-neg.mc > test-float-neg-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-float-neg.out tests/test-float-neg.out
+diff: test-float-neg.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-float
+../bin/main.exe -l tests/test-float.mc > test-float-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-float.out tests/test-float.out
+diff: test-float.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-for
+../bin/main.exe -l tests/test-for.mc > test-for-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-for.out tests/test-for.out
+diff: test-for.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
 ###### Testing test-hello-world
 ../bin/main.exe -l tests/test-hello-world.mc > test-hello-world-temp.out
 ./testall.sh: line 62: ../bin/main.exe: No such file or directory
@@ -81,12 +180,57 @@ diff: test-hello-world.out: No such file or directory
 ./testall.sh: line 63: SignalError: command not found
 ###### FAILED
 
+###### Testing test-ifelse-1
+../bin/main.exe -l tests/test-ifelse-1.mc > test-ifelse-1-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-ifelse-1.out tests/test-ifelse-1.out
+diff: test-ifelse-1.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-ifelse-2
+../bin/main.exe -l tests/test-ifelse-2.mc > test-ifelse-2-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-ifelse-2.out tests/test-ifelse-2.out
+diff: test-ifelse-2.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-mod
+../bin/main.exe -l tests/test-mod.mc > test-mod-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-mod.out tests/test-mod.out
+diff: test-mod.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-mult-neg
+../bin/main.exe -l tests/test-mult-neg.mc > test-mult-neg-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-mult-neg.out tests/test-mult-neg.out
+diff: test-mult-neg.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
 ###### Testing test-mult1
 ../bin/main.exe -l tests/test-mult1.mc > test-mult1-temp.out
 ./testall.sh: line 62: ../bin/main.exe: No such file or directory
 ./testall.sh: line 63: SignalError: command not found
 diff -s test-mult1.out tests/test-mult1.out
 diff: test-mult1.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-negative-1
+../bin/main.exe -l tests/test-negative-1.mc > test-negative-1-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-negative-1.out tests/test-negative-1.out
+diff: test-negative-1.out: No such file or directory
 ./testall.sh: line 63: SignalError: command not found
 ###### FAILED
 
@@ -114,6 +258,15 @@ diff: test-print-int.out: No such file or directory
 ./testall.sh: line 63: SignalError: command not found
 diff -s test-print-string.out tests/test-print-string.out
 diff: test-print-string.out: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+###### FAILED
+
+###### Testing test-while
+../bin/main.exe -l tests/test-while.mc > test-while-temp.out
+./testall.sh: line 62: ../bin/main.exe: No such file or directory
+./testall.sh: line 63: SignalError: command not found
+diff -s test-while.out tests/test-while.out
+diff: test-while.out: No such file or directory
 ./testall.sh: line 63: SignalError: command not found
 ###### FAILED
 
