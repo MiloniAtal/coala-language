@@ -34,9 +34,7 @@ let translate (globals, functions) =
   and char_t   = L.pointer_type (L.i8_type context)
   and string_t   = L.pointer_type (L.i8_type context) in
 
-  let array_of_int_t = L.array_type i32_t
-  and array_of_bool_t = L.array_type i1_t
-  and array_of_string_t = L.array_type string_t in
+  let array_of_int_t = L.array_type i32_t in
 
   (* Return the LLVM type for a Coala type *)
   let ltype_of_typ = function
@@ -46,8 +44,6 @@ let translate (globals, functions) =
     | A.Char -> char_t
     | A.Float -> float_t
     | A.Array(A.Int, size) -> array_of_int_t size
-    | A.Array(A.Bool, size) -> array_of_bool_t size
-    | A.Array(A.String, size) -> array_of_string_t size
     | A.Array(_, _) -> raise (Failure ("illegal array"))
     | A.Void -> void_t
   in
@@ -122,9 +118,6 @@ let translate (globals, functions) =
       | SStringLit s -> L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder
       | SConcat(s1, s2) -> L.build_global_stringptr ((String.sub s1 1 ((String.length s1) - 2) ) ^ (String.sub s2 1 ((String.length s2) - 2) ^ "\n")) "tmp" builder
       | SArrayIntLit l -> L.const_array i32_t (Array.map (L.const_int i32_t) (Array.of_list l))
-      | SArrayBoolLit l -> let bool_of_int b = L.const_int i1_t (if b then 1 else 0) in L.const_array i1_t (Array.map (bool_of_int) (Array.of_list l))
-      | SArrayStringLit l -> let string_helper s = L.build_global_stringptr ((String.sub s 1 ((String.length s) - 2) ) ^ "\n") s builder in 
-                          L.const_array i32_t (Array.map (string_helper) (Array.of_list l))
       | SArrayIndexLit (var, e) -> let (typ, _) = e in
         (match typ with
         | A.Int -> (*let llv = (L.build_load (lookup var) var builder) in *)

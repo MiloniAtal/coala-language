@@ -14,8 +14,6 @@ and sx =
   | SBinop of sexpr * bop * sexpr
   | SAssign of string * sexpr
   | SArrayIntLit of int list
-  | SArrayStringLit of string list 
-  | SArrayBoolLit of bool list
   | SArrayIndexLit of string * sexpr
   | SCall of string * sexpr list
   | SNoexpr
@@ -56,9 +54,7 @@ let rec string_of_sexpr (t, e) =
       | SBinop(e1, o, e2) ->
         string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
       | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
-      | SArrayStringLit (el)-> "string " ^  "[" ^ ((String.concat ", " (el))) ^ "]"
       | SArrayIntLit (el) -> "int " ^ "[" ^ (String.concat ", " (List.map string_of_int el)) ^ "]"
-      | SArrayBoolLit (el) -> "bool " ^ "[" ^ (String.concat ", " (List.map string_of_bool el))^ "]"
       | SArrayIndexLit (var, e) -> var ^ "[" ^ (string_of_sexpr e) ^ "]"
       | SCall(f, el) ->
           f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"

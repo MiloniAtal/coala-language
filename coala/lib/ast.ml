@@ -14,8 +14,6 @@ type expr =
   | Assign of string * expr
   | Call of string * expr list
   | ArrayIntLit of int list
-  | ArrayStringLit of string list
-  | ArrayBoolLit of bool list
   | ArrayIndexLit of string * expr
   | Concat of string * string
   | Noexpr
@@ -75,8 +73,6 @@ let rec string_of_expr = function
   | Call(f, el) ->
     f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | ArrayIntLit(el) -> "[" ^ (String.concat ", " (List.map string_of_int el)) ^ "]"
-  | ArrayStringLit(el) -> "[" ^ ((String.concat ", " (el))) ^ "]"
-  | ArrayBoolLit(el) -> "[" ^ (String.concat ", " (List.map string_of_bool el))^ "]"
   | ArrayIndexLit(s, e) -> s ^ "[" ^ string_of_expr e ^ "]"
   | Noexpr -> ""
 
